@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>2.2.6 The Sensitivity of Square Systems</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>05_2.2.6_The_Sensitivity_of_Square_Systems</h1>
+<pre><code>
+Lecture: 2._Chapters/2.2_Matrix_Analysis
+Content: 05_2.2.6_The_Sensitivity_of_Square_Systems
+
+</code></pre>
+<h3>2.2.6 方阵系统的敏感性 - 详细深入分析</h3>
+<h4>引言</h4>
+<p>在数值线性代数中，分析线性系统 $ Ax = b $ 的敏感性是理解计算稳定性和精度的关键步骤。方阵 $ A $ 的敏感性可以通过扰动分析来研究，即当矩阵 $ A $ 或向量 $ b $ 发生微小变化时，解 $ x $ 如何变化。</p>
+<h4>奇异值分解（SVD）分析</h4>
+<p>首先，我们通过奇异值分解来分析方阵 $ A $ 的敏感性。设 $ A $ 的奇异值分解为：
+$$ A = U \Sigma V^T $$
+其中，$ U $ 和 $ V $ 是正交矩阵，$ \Sigma $ 是对角矩阵，对角线上为 $ A $ 的奇异值。根据这个分解，我们可以表示解 $ x $ 为：
+$$ x = A^{-1}b = V \Sigma^{-1} U^T b $$
+若 $ A $ 的最小奇异值 $ \sigma_n $ 很小，则 $ A $ 接近于一个奇异矩阵，此时对 $ A $ 或 $ b $ 的微小扰动可能导致解 $ x $ 的巨大变化。</p>
+<h4>条件数</h4>
+<p>线性系统敏感性的一个精确度量是条件数。矩阵 $ A $ 的条件数定义为：
+$$ \kappa(A) = |A| |A^{-1}| $$
+对于2-范数，条件数表示为：
+$$ \kappa_2(A) = \frac{\sigma_1}{\sigma_n} $$
+其中，$ \sigma_1 $ 和 $ \sigma_n $ 分别是 $ A $ 的最大和最小奇异值。条件数越大，矩阵越病态，系统 $ Ax = b $ 的解对输入的变化越敏感。</p>
+<h4>误差传播</h4>
+<p>对于系统 $ Ax = b $，若 $ A $ 和 $ b $ 存在扰动 $ \Delta A $ 和 $ \Delta b $，则解的扰动可以表示为：
+$$ A(x + \Delta x) = b + \Delta b - \Delta A x $$
+近似为：
+$$ \Delta x \approx A^{-1} (\Delta b - \Delta A x) $$
+因此，解的相对误差与输入的相对误差之间的关系为：
+$$ \frac{|\Delta x|}{|x|} \leq \kappa(A) \left( \frac{|\Delta A|}{|A|} + \frac{|\Delta b|}{|b|} \right) $$
+这表明，相对误差会被条件数放大，从而影响计算结果的精度。</p>
+<h4>应用实例</h4>
+<p>考虑一个简单的例子，矩阵 $ A $ 的条件数为 $ 10^6 $，若 $ b $ 存在 $ 10^{-6} $ 的相对误差，则解的相对误差可能达到 $ 1 $。这种情况在实际计算中可能导致非常不稳定的解，从而需要采用稳健的数值算法。</p>
+<h4>精细的误差界</h4>
+<p>进一步的误差分析可以考虑矩阵的元素级别误差界。设 $ F, G \in \mathbb{R}^{m \times n} $，如果 $ |F| \leq |G| $ 表示 $ F $ 的每个元素都不大于 $ G $ 的对应元素，则有：
+$$ |A + \Delta A| \leq |A| + |\Delta A| $$
+这种方法可以得到更精细的误差估计，从而提高计算的可靠性。</p>
+<h3>总结</h3>
+<p>通过奇异值分解和条件数分析，我们可以深入理解线性系统的敏感性。高条件数矩阵的计算需要特别注意，以避免数值不稳定性。在实际应用中，选择合适的数值算法和精细的误差分析方法，对于确保计算结果的精度和稳定性至关重要。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 05_2.2.6_The_Sensitivity_of_Square_Systems
+
+"""
+
+Lecture: 2._Chapters/2.2_Matrix_Analysis
+Content: 05_2.2.6_The_Sensitivity_of_Square_Systems
+
+"""
+
+</code></pre>
+  </div>
+</body>
+</html>
+  

@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>2.8.2 Power Iterations</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>01_2.8.2_Power_Iterations</h1>
+<pre><code>
+Lecture: 2._Chapters/2.8_Symmetric_Eigenvalue_Problems
+Content: 01_2.8.2_Power_Iterations
+
+</code></pre>
+<h3>2.8.2 幂迭代法（Power Iterations）</h3>
+<h4>1. 动机与背景</h4>
+<p>幂迭代法是特征值计算中最古老且最简单的方法之一。它主要用于计算矩阵的主特征值（即模最大的特征值）及其对应的特征向量。对于大规模稀疏矩阵，幂迭代法由于其算法简单、存储需求低，仍然是一个重要的工具。</p>
+<h4>2. 幂迭代法的基本概念</h4>
+<p>幂迭代法利用一个初始向量，通过不断地将矩阵作用于该向量上，逐步逼近矩阵的主特征值及其对应的特征向量。具体过程如下：
+假设 $ A $ 是一个 $ n \times n $ 的实对称矩阵，$ q^{(0)} $ 是一个单位2-范数的初始向量，则幂迭代法生成一列向量 $ q^{(k)} $ 如下：
+$$ z^{(k)} = A q^{(k-1)} $$
+$$ q^{(k)} = \frac{z^{(k)}}{|z^{(k)}|_2} $$
+$$ \lambda^{(k)} = (q^{(k)})^T A q^{(k)} $$</p>
+<p>其中，$ q^{(k)} $ 会逐渐收敛到 $ A $ 的主特征向量，而 $ \lambda^{(k)} $ 会收敛到相应的主特征值。</p>
+<h4>3. 收敛性分析</h4>
+<p>幂迭代法的收敛性依赖于矩阵 $ A $ 的特征值分布。如果 $ A $ 的主特征值 $ \lambda_1 $ 是唯一的，并且与次特征值 $ \lambda_2 $ 有明显的间距（即 $ |\lambda_1| &gt; |\lambda_2| $），则幂迭代法的收敛速度较快。</p>
+<p>设 $ A $ 的特征值和对应的特征向量分别为 $ \lambda_1, \lambda_2, \ldots, \lambda_n $ 和 $ q_1, q_2, \ldots, q_n $，且 $ |\lambda_1| &gt; |\lambda_2| \geq \ldots \geq |\lambda_n| $。初始向量 $ q^{(0)} $ 可以表示为特征向量的线性组合：
+$$ q^{(0)} = \sum_{i=1}^n \alpha_i q_i $$
+在迭代过程中，$ q^{(k)} $ 的主要成分将逐渐趋向于主特征向量 $ q_1 $，即
+$$ q^{(k)} \approx \alpha_1 \lambda_1^k q_1 $$
+由于对每一步都进行归一化处理，最终 $ q^{(k)} $ 将收敛到 $ q_1 $。</p>
+<h4>4. 幂迭代法的数值稳定性</h4>
+<p>幂迭代法的数值稳定性取决于初始向量 $ q^{(0)} $ 的选择。一般情况下，即使初始向量缺乏主特征向量的成分，计算过程中引入的舍入误差也会引导迭代向量逐渐包含主特征向量的成分，从而保证收敛性。</p>
+<p>幂迭代法的收敛速度由特征值之间的比值决定，即
+$$ \frac{|\lambda_2|}{|\lambda_1|} $$
+这一比值越小，收敛速度越快。</p>
+<h4>5. 应用举例</h4>
+<p>幂迭代法广泛应用于计算大规模稀疏矩阵的主特征值和特征向量。例如，在Google PageRank算法中，幂迭代法被用来计算网页的重要性分数。具体而言，通过构造网页的链接矩阵，将其转换为一个稀疏矩阵，再应用幂迭代法计算主特征值及其对应的特征向量，从而确定网页的排名。</p>
+<h4>6. 幂迭代法的改进</h4>
+<p>为了提高幂迭代法的收敛速度，可以结合其他数值方法，如反幂迭代法和Rayleigh商迭代法。</p>
+<ul>
+<li><strong>反幂迭代法</strong>：通过对 $ A $ 进行移位并求逆，转换为求解 $ (A - \mu I)^{-1} $ 的主特征值问题，从而快速逼近原矩阵 $ A $ 的一个特定特征值。</li>
+<li><strong>Rayleigh商迭代法</strong>：结合Rayleigh商和反幂迭代法，通过动态调整移位量，提高收敛速度和精度。</li>
+</ul>
+<h4>7. 结论</h4>
+<p>幂迭代法作为特征值计算的基本方法，具有算法简单、实现方便的优点。在大规模稀疏矩阵的特征值计算中，幂迭代法仍然是一个有效的工具。通过结合其他数值方法，可以进一步提高其收敛速度和计算精度，从而在实际应用中发挥更大的作用。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 01_2.8.2_Power_Iterations
+
+"""
+
+Lecture: 2._Chapters/2.8_Symmetric_Eigenvalue_Problems
+Content: 01_2.8.2_Power_Iterations
+
+"""
+
+</code></pre>
+  </div>
+</body>
+</html>
+  

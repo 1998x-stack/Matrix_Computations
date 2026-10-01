@@ -1,0 +1,97 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>2.10.2 Lanczos Quadrature and Approximation</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>01_2.10.2_Lanczos_Quadrature_and_Approximation</h1>
+<pre><code>
+Lecture: 2._Chapters/2.10_Large_Sparse_Eigenvalue_Problems
+Content: 01_2.10.2_Lanczos_Quadrature_and_Approximation
+
+</code></pre>
+<h3>00_2.10.1_对称Lanczos过程</h3>
+<h4>简介</h4>
+<p>对称Lanczos过程是一种用于计算大规模稀疏对称矩阵特征值和特征向量的迭代算法。该方法以其高效性和对极端特征值的快速收敛特性而著称，在处理大型稀疏矩阵时尤其有用。与传统的Householder方法不同，Lanczos过程依赖于矩阵-向量乘积而不是直接更新矩阵，从而保持了矩阵的稀疏性。</p>
+<h4>Krylov子空间</h4>
+<p>Lanczos过程的核心思想是Krylov子空间的构建。对于给定的初始向量 $q_1$ ，第k步的Krylov子空间定义为：</p>
+<p>$$ K_k(A, q_1) = \text{span}{q_1, Aq_1, A^2q_1, \ldots, A^{k-1}q_1} $$</p>
+<p>通过在这些子空间中进行正交化处理，我们可以得到一个三对角矩阵，其特征值逐步逼近原矩阵的特征值。</p>
+<h4>Lanczos算法</h4>
+<p>Lanczos算法通过以下步骤计算出三对角矩阵：</p>
+<ol>
+<li>
+<p>初始化：
+$$
+q_0 = 0, \quad \beta_0 = 0, \quad q_1 \text{ 为单位向量}
+$$</p>
+</li>
+<li>
+<p>迭代：
+$$
+\begin{aligned}
+&amp;\text{for } k = 1, 2, \ldots, m \
+&amp;\quad r_k = Aq_k - \beta_{k-1}q_{k-1} \
+&amp;\quad \alpha_k = q_k^T r_k \
+&amp;\quad r_k = r_k - \alpha_k q_k \
+&amp;\quad \beta_k = |r_k|<em k+1="">2 \
+&amp;\quad \text{if } \beta_k = 0 \text{ then break} \
+&amp;\quad q</em> = r_k / \beta_k
+\end{aligned}
+$$</p>
+</li>
+<li>
+<p>输出：
+$$
+Q_m = [q_1, q_2, \ldots, q_m], \quad T_m = \text{tridiagonal}(\beta_{k-1}, \alpha_k, \beta_k)
+$$</p>
+</li>
+</ol>
+<h4>收敛性和数值稳定性</h4>
+<p>Lanczos过程在精确算术中表现出惊人的收敛性，但在实际计算中会受到舍入误差的影响。这些误差可能导致Lanczos向量丧失正交性，从而影响算法的稳定性和精度。为了应对这一问题，可以采用重正交化技术，如完全正交化或部分正交化。</p>
+<h5>Ritz值和Ritz向量</h5>
+<p>Lanczos算法生成的三对角矩阵 $T_m$ 的特征值称为Ritz值，它们是原始矩阵 $A$ 特征值的近似。对应的特征向量称为Ritz向量，表示在Krylov子空间中找到的近似特征向量。</p>
+<h4>应用场景</h4>
+<p>对称Lanczos过程广泛应用于以下领域：</p>
+<ol>
+<li><strong>大规模特征值问题</strong>：例如，量子力学中的哈密顿矩阵计算。</li>
+<li><strong>结构工程</strong>：如振动分析和模态分析。</li>
+<li><strong>图论和网络分析</strong>：例如，计算图的谱嵌入和社区检测。</li>
+</ol>
+<h4>算法性能优化</h4>
+<p>为了提高Lanczos过程的性能，可以采用以下策略：</p>
+<ol>
+<li><strong>选择合适的初始向量</strong>：初始向量的选择可以显著影响算法的收敛速度和精度。</li>
+<li><strong>迭代次数控制</strong>：通过监控特征值的变化率，动态调整迭代次数，以减少计算量。</li>
+<li><strong>重正交化策略</strong>：在重正交化过程中平衡计算复杂度和正交性保持。</li>
+</ol>
+<h4>结论</h4>
+<p>对称Lanczos过程在处理大规模稀疏对称矩阵特征值问题中表现出色。通过构建和操作Krylov子空间，它能够高效地逼近矩阵的极端特征值和对应特征向量。尽管舍入误差可能影响算法的稳定性，但通过适当的重正交化技术和优化策略，可以显著提高算法的鲁棒性和精度  。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 01_2.10.2_Lanczos_Quadrature_and_Approximation
+
+"""
+
+Lecture: 2._Chapters/2.10_Large_Sparse_Eigenvalue_Problems
+Content: 01_2.10.2_Lanczos_Quadrature_and_Approximation
+
+"""
+
+</code></pre>
+  </div>
+</body>
+</html>
+  

@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>2.5.2 The QR Factorization</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>01_2.5.2_The_QR_Factorization</h1>
+<pre><code>
+Lecture: 2._Chapters/2.5_Orthogonalization_and_Least_Squares
+Content: 01_2.5.2_The_QR_Factorization
+
+</code></pre>
+<h3>详细分析QR分解</h3>
+<p>在《Matrix Computations》一书的第5章，第5.2节对QR分解进行了详细讨论。以下是对第2.5.2节“QR分解”的详细分析：</p>
+<h4>1. QR分解的定义与性质</h4>
+<p>QR分解是一种将矩阵分解为一个正交矩阵 $Q$ 和一个上三角矩阵 $R$ 的方法。具体来说，给定一个 $m \times n$ 的矩阵 $A$，QR分解可以表示为：
+$$ A = QR $$
+其中， $Q$ 是一个 $m \times m$ 的正交矩阵， $R$ 是一个 $m \times n$ 的上三角矩阵。</p>
+<p><strong>性质</strong>：</p>
+<ul>
+<li>正交矩阵 $Q$ 满足 $Q^T Q = I$，即 $Q$ 的转置等于其逆矩阵。</li>
+<li>QR分解中的上三角矩阵 $R$ 的对角线元素是非负的。</li>
+<li>QR分解在解决线性最小二乘问题和特征值计算中具有重要作用  。</li>
+</ul>
+<h4>2. QR分解的存在性和唯一性</h4>
+<p>根据定理5.2.1，对于任意的 $m \times n$ 矩阵 $A$，都存在一个正交矩阵 $Q$ 和一个上三角矩阵 $R$，使得 $A = QR$。具体证明过程如下：</p>
+<ol>
+<li><strong>基本情况</strong>：当 $n = 1$ 时， $Q$ 是一个Householder矩阵，使得 $R = Q^T A$ 的非对角元素为零。此时， $A = QR$ 是 $A$ 的QR分解。</li>
+<li><strong>归纳步骤</strong>：假设对于一般的 $n$，矩阵 $A$ 可以分块为：
+$$ A = \begin{pmatrix} A_1 &amp; v \end{pmatrix} $$
+通过归纳假设，存在正交矩阵 $Q_1$ 和上三角矩阵 $R_1$，使得 $A_1 = Q_1 R_1$。设 $w = Q_1^T v$，则可以继续对 $w$ 进行QR分解，从而得到整个矩阵 $A$ 的QR分解 。</li>
+</ol>
+<h4>3. Householder变换与QR分解</h4>
+<p>Householder变换是一种用于将向量的一部分置零的正交变换。在QR分解中，通过一系列的Householder变换，可以将矩阵变换为上三角形式。具体步骤如下：</p>
+<ol>
+<li>对矩阵 $A$ 的第一列应用Householder变换，将其变换为 $(\alpha, 0, \ldots, 0)^T$ 的形式。</li>
+<li>对矩阵 $A$ 剩余的部分递归应用Householder变换，逐步将每一列的下三角部分置零  。</li>
+</ol>
+<h4>4. Givens旋转与QR分解</h4>
+<p>Givens旋转是一种用于将向量的特定分量置零的旋转变换。在QR分解中，通过一系列的Givens旋转，可以逐步将矩阵变换为上三角形式。具体步骤如下：</p>
+<ol>
+<li>对矩阵 $A$ 的非对角元素应用Givens旋转，将其置零。</li>
+<li>递归应用Givens旋转，直至矩阵的下三角部分全部置零  。</li>
+</ol>
+<h4>5. 块QR分解</h4>
+<p>块QR分解通过将矩阵划分为多个子块，递归地对每个子块进行QR分解，从而实现对大规模矩阵的高效分解。具体步骤如下：</p>
+<ol>
+<li>将矩阵 $A$ 划分为两个子矩阵 $A_1$ 和 $A_2$。</li>
+<li>对子矩阵 $A_1$ 进行QR分解，得到 $Q_1$ 和 $R_1$。</li>
+<li>更新子矩阵 $A_2$，并对其进行QR分解，得到 $Q_2$ 和 $R_2$。</li>
+<li>合并 $Q_1$ 和 $Q_2$，以及 $R_1$ 和 $R_2$，得到最终的QR分解结果  。</li>
+</ol>
+<h4>6. QR分解的应用</h4>
+<p>QR分解在许多实际应用中具有重要意义，例如：</p>
+<ul>
+<li><strong>线性最小二乘问题</strong>：QR分解常用于求解过定方程组的最小二乘解，通过QR分解，可以将原问题转化为求解上三角线性系统的问题。</li>
+<li><strong>特征值计算</strong>：在QR算法中，QR分解用于将矩阵变换为Hessenberg形式，从而加速特征值的计算。</li>
+<li><strong>矩阵求逆</strong>：通过QR分解，可以高效地求解矩阵的逆，特别是对于病态矩阵，QR分解具有较好的数值稳定性  。</li>
+</ul>
+<h3>总结</h3>
+<p>QR分解是数值线性代数中的重要工具，通过将矩阵分解为正交矩阵和上三角矩阵的乘积，可以高效地解决线性最小二乘问题、特征值计算和矩阵求逆等问题。QR分解具有良好的数值稳定性和计算效率，是现代数值计算中不可或缺的重要方法。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 01_2.5.2_The_QR_Factorization
+
+"""
+
+Lecture: 2._Chapters/2.5_Orthogonalization_and_Least_Squares
+Content: 01_2.5.2_The_QR_Factorization
+
+"""
+
+import numpy as np
+from typing import Tuple
+
+class QRDecomposition:
+    """
+    实现QR分解的类，提供Householder和Givens两种方法
+    """
+
+    @staticmethod
+    def householder_reflection(A: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+        """
+        使用Householder变换对矩阵A进行QR分解
+
+        Args:
+            A (np.ndarray): 输入矩阵
+
+        Returns:
+            Tuple[np.ndarray, np.ndarray]: Q和R矩阵
+        """
+        m, n = A.shape
+        Q = np.eye(m)
+        R = A.copy()
+
+        for i in range(n):
+            # 计算Householder向量
+            x = R[i:, i]
+            alpha = -np.sign(x[0]) * np.linalg.norm(x)
+            v = x.copy()
+            v[0] -= alpha
+            v /= np.linalg.norm(v)
+
+            # 计算Householder矩阵
+            H = np.eye(m)
+            H[i:, i:] -= 2.0 * np.outer(v, v)
+
+            # 更新R和Q
+            R = H @ R
+            Q = Q @ H
+
+        return Q, R
+
+    @staticmethod
+    def givens_rotation(A: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+        """
+        使用Givens旋转对矩阵A进行QR分解
+
+        Args:
+            A (np.ndarray): 输入矩阵
+
+        Returns:
+            Tuple[np.ndarray, np.ndarray]: Q和R矩阵
+        """
+        m, n = A.shape
+        Q = np.eye(m)
+        R = A.copy()
+
+        for j in range(n):
+            for i in range(m-1, j, -1):
+                # 计算Givens旋转矩阵的元素
+                a, b = R[i-1, j], R[i, j]
+                r = np.hypot(a, b)
+                c = a / r
+                s = -b / r
+
+                # 应用Givens旋转
+                G = np.eye(m)
+                G[i-1, i-1] = c
+                G[i, i] = c
+                G[i-1, i] = s
+                G[i, i-1] = -s
+
+                R = G @ R
+                Q = Q @ G.T
+
+        return Q, R
+
+def main():
+    """
+    主函数，用于示例QR分解
+    """
+    # 示例矩阵
+    A = np.array([
+        [12, -51, 4],
+        [6, 167, -68],
+        [-4, 24, -41]
+    ], dtype=float)
+
+    # 使用Householder变换进行QR分解
+    print("使用Householder变换进行QR分解:")
+    Q_h, R_h = QRDecomposition.householder_reflection(A)
+    print("Q矩阵:")
+    print(Q_h)
+    print("R矩阵:")
+    print(R_h)
+    print("验证Q @ R是否等于A:")
+    print(np.allclose(Q_h @ R_h, A))
+
+    # 使用Givens旋转进行QR分解
+    print("\n使用Givens旋转进行QR分解:")
+    Q_g, R_g = QRDecomposition.givens_rotation(A)
+    print("Q矩阵:")
+    print(Q_g)
+    print("R矩阵:")
+    print(R_g)
+    print("验证Q @ R是否等于A:")
+    print(np.allclose(Q_g @ R_g, A))
+
+if __name__ == "__main__":
+    main()
+</code></pre>
+  </div>
+</body>
+</html>
+  

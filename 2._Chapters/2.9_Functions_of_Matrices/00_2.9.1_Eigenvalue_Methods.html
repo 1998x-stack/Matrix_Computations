@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>2.9.1 Eigenvalue Methods</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>00_2.9.1_Eigenvalue_Methods</h1>
+<pre><code>
+Lecture: 2._Chapters/2.9_Functions_of_Matrices
+Content: 00_2.9.1_Eigenvalue_Methods
+
+</code></pre>
+<h3>2.9.1 特征值方法</h3>
+<h4>引言</h4>
+<p>特征值方法在矩阵计算中占有重要地位，尤其是在处理对称矩阵和函数计算时。这些方法不仅应用广泛，而且在理论上也有深厚的基础。理解这些方法对于解决复杂的数值问题至关重要 。</p>
+<h4>1. 特征值与特征向量的定义</h4>
+<p>对于一个矩阵 $A$，如果存在一个标量 $\lambda$ 和一个非零向量 $x$ 使得 $Ax = \lambda x$，那么 $\lambda$ 被称为 $A$ 的特征值，$x$ 被称为对应的特征向量。对于对称矩阵，特征值都是实数，并且特征向量可以正交化 。</p>
+<h4>2. 特征值方法的基本性质</h4>
+<h5>2.1 对称 Schur 分解</h5>
+<p>对于一个对称矩阵 $A \in \mathbb{R}^{n \times n}$，存在一个正交矩阵 $Q$，使得 $Q^T A Q = \Lambda$，其中 $\Lambda$ 是对角矩阵，其对角元素为 $A$ 的特征值。这种分解称为对称 Schur 分解 。</p>
+<h5>2.2 特征值分解</h5>
+<p>特征值分解是特征值方法的核心。对于对称矩阵 $A$，其特征值分解可以表示为：
+$$ A = Q \Lambda Q^T $$
+其中，$Q$ 是由 $A$ 的特征向量组成的正交矩阵，$\Lambda$ 是由 $A$ 的特征值组成的对角矩阵。这种分解在许多算法中都有应用，包括求解线性方程组、优化问题和信号处理 。</p>
+<h4>3. 特征值方法的数值算法</h4>
+<h5>3.1 幂迭代法</h5>
+<p>幂迭代法是一种简单且有效的特征值算法，主要用于求解矩阵的主特征值及其对应的特征向量。其基本思想是，通过反复迭代，将一个初始向量逐步逼近于主特征向量。具体步骤如下：</p>
+<ol>
+<li>选择一个初始向量 $x_0$；</li>
+<li>在每次迭代中计算 $x_{k+1} = A x_k$；</li>
+<li>归一化 $x_{k+1}$；</li>
+<li>迭代直到收敛 。</li>
+</ol>
+<h5>3.2 反幂迭代法</h5>
+<p>反幂迭代法与幂迭代法相反，主要用于求解矩阵的最小特征值及其对应的特征向量。其基本步骤与幂迭代法类似，但在每次迭代中，需要求解线性方程组：
+$$ x_{k+1} = A^{-1} x_k $$
+反幂迭代法的收敛速度通常比幂迭代法快，但需要计算矩阵的逆或进行线性求解 。</p>
+<h5>3.3 QR 算法</h5>
+<p>QR 算法是一种广泛使用的特征值分解算法，特别适用于对称矩阵。其基本思想是，通过对矩阵进行 QR 分解，将其逐步对角化。具体步骤如下：</p>
+<ol>
+<li>对矩阵 $A$ 进行 QR 分解，得到 $A = QR$；</li>
+<li>计算新的矩阵 $A' = RQ$；</li>
+<li>重复上述步骤，直到矩阵 $A$ 收敛到对角矩阵 。</li>
+</ol>
+<h5>3.4 Jacobi 算法</h5>
+<p>Jacobi 算法是另一种常用的特征值分解算法，尤其适用于高精度需求的对称矩阵。其基本思想是，通过一系列的 Givens 旋转，将矩阵逐步对角化。每次旋转消除一个非对角元素，使得矩阵逐步接近于对角矩阵 。</p>
+<h4>4. 特征值方法的应用</h4>
+<p>特征值方法在科学计算和工程应用中有广泛的应用。例如，在振动分析中，特征值方法用于计算结构的固有频率；在图像处理和压缩中，特征值方法用于降维和去噪；在统计分析中，特征值方法用于主成分分析（PCA）和协方差矩阵的特征值分解 。</p>
+<h3>总结</h3>
+<p>特征值方法是数值线性代数中的重要工具，通过理解和应用这些方法，可以有效地解决许多复杂的数值问题。通过不同的算法，如幂迭代法、反幂迭代法、QR 算法和 Jacobi 算法，可以在不同的应用场景中实现高效和精确的特征值分解。这些方法不仅在理论上有深厚的基础，而且在实际应用中也展现了其强大的功能和广泛的适用性 。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 00_2.9.1_Eigenvalue_Methods
+
+"""
+
+Lecture: 2._Chapters/2.9_Functions_of_Matrices
+Content: 00_2.9.1_Eigenvalue_Methods
+
+"""
+
+</code></pre>
+  </div>
+</body>
+</html>
+  

@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>2.8.3 The Symmetric QR Algorithm</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>02_2.8.3_The_Symmetric_QR_Algorithm</h1>
+<pre><code>
+Lecture: 2._Chapters/2.8_Symmetric_Eigenvalue_Problems
+Content: 02_2.8.3_The_Symmetric_QR_Algorithm
+
+</code></pre>
+<h3>2.8.3 对称 QR 算法</h3>
+<h4>1. 引言</h4>
+<p>对称 QR 算法是计算对称矩阵特征值问题的一种高效方法。它结合了 QR 分解和移位策略，通过不断迭代将矩阵逼近对角形式，最终得到特征值和特征向量。该算法不仅在理论上有重要意义，而且在实际计算中广泛应用，特别是在处理大规模稀疏矩阵时。</p>
+<h4>2. 算法基础</h4>
+<p>对称 QR 算法的基本思想是通过 QR 分解将矩阵不断迭代逼近对角形式。具体而言，对于一个对称矩阵 $A \in \mathbb{R}^{n \times n}$，首先通过 Householder 变换将其化为对称三对角矩阵，然后对该三对角矩阵应用 QR 迭代。每一步迭代包括以下步骤：</p>
+<ol>
+<li>
+<p><strong>三对角化</strong>：将对称矩阵 $A$ 化为对称三对角矩阵 $T$：
+$$ T = Q^T A Q $$
+其中 $Q$ 是正交矩阵，包含了 Householder 变换的累积效果。</p>
+</li>
+<li>
+<p><strong>QR 分解</strong>：对三对角矩阵 $T$ 进行 QR 分解：
+$$ T - \mu I = QR $$
+其中 $Q$ 是正交矩阵，$R$ 是上三角矩阵，$\mu$ 是移位参数。</p>
+</li>
+<li>
+<p><strong>矩阵更新</strong>：更新矩阵 $T$：
+$$ T = RQ + \mu I $$</p>
+</li>
+</ol>
+<p>通过不断迭代上述步骤，矩阵 $T$ 的非对角元素逐渐趋近于零，最终得到对角矩阵，其对角元素即为原矩阵 $A$ 的特征值。</p>
+<h4>3. 算法细节</h4>
+<h5>3.1 三对角化</h5>
+<p>三对角化是对称 QR 算法的第一步。使用 Householder 变换可以将对称矩阵 $A$ 转换为对称三对角矩阵 $T$。具体步骤如下：</p>
+<ol>
+<li>对矩阵 $A$ 的每一列进行 Householder 变换，消去次对角线以下的元素。</li>
+<li>每次变换生成一个 Householder 矩阵 $P_i$，累积这些变换以形成正交矩阵 $Q$。</li>
+<li>最终得到 $T = Q^T A Q$，其中 $T$ 是对称三对角矩阵。</li>
+</ol>
+<h5>3.2 QR 分解和移位</h5>
+<p>在每一步迭代中，对矩阵 $T$ 进行带移位的 QR 分解。移位参数 $\mu$ 的选择非常关键，通常选择 $T$ 的末尾 2x2 子矩阵的特征值之一作为移位参数，这种策略称为 Wilkinson 移位。移位后的 QR 分解步骤如下：</p>
+<ol>
+<li>计算 $T - \mu I$ 的 QR 分解，得到 $T - \mu I = QR$。</li>
+<li>更新矩阵 $T$，得到新的三对角矩阵 $T = RQ + \mu I$。</li>
+</ol>
+<p>移位策略的引入显著提高了算法的收敛速度，使得非对角元素以三次方速度收敛。</p>
+<h4>4. 收敛性与数值稳定性</h4>
+<p>对称 QR 算法的收敛性依赖于移位策略的有效性和初始矩阵的特征值分布。对于特征值间距较大的矩阵，算法通常具有较快的收敛速度。此外，算法的数值稳定性通过正交变换和 QR 分解得以保证。</p>
+<p>根据 Wilkinson 的研究，带 Wilkinson 移位的 QR 算法具有全局收敛性，且在大多数情况下收敛速度较快。</p>
+<h4>5. 算法实现与复杂度</h4>
+<p>对称 QR 算法的实现可以分为两个主要部分：三对角化和 QR 迭代。具体实现时，通常将矩阵存储为压缩形式，以节省存储空间和计算成本。算法的主要计算复杂度集中在三对角化步骤，为 $O(n^3)$ 次浮点运算，而每次 QR 迭代的复杂度为 $O(n^2)$ 次浮点运算。</p>
+<p>对于大规模稀疏矩阵，可以利用矩阵的稀疏结构和高效的数值库（如 LAPACK）来优化算法的实现和性能。</p>
+<h4>6. 实际应用</h4>
+<p>对称 QR 算法广泛应用于科学计算和工程领域。例如，在结构力学中，用于求解大型对称刚度矩阵的特征值问题；在电子工程中，用于分析对称电路矩阵的模态特性。此外，该算法还应用于统计分析、数据挖掘和机器学习中的协方差矩阵特征值分解等问题。</p>
+<h3>总结</h3>
+<p>对称 QR 算法作为求解对称矩阵特征值问题的一种重要方法，其理论基础扎实，算法实现高效。通过引入移位策略和正交变换，该算法在数值稳定性和收敛速度方面表现优异。随着计算技术的不断发展，对称 QR 算法在大规模科学计算和工程应用中将发挥越来越重要的作用。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 02_2.8.3_The_Symmetric_QR_Algorithm
+
+"""
+
+Lecture: 2._Chapters/2.8_Symmetric_Eigenvalue_Problems
+Content: 02_2.8.3_The_Symmetric_QR_Algorithm
+
+"""
+
+import numpy as np
+from typing import Tuple
+
+class SymmetricQRAlgorithm:
+    def __init__(self, matrix: np.ndarray):
+        """
+        Initialize the SymmetricQRAlgorithm with a given symmetric matrix.
+
+        Args:
+        - matrix (np.ndarray): The symmetric matrix to solve for eigenvalues and eigenvectors.
+        """
+        assert matrix.shape[0] == matrix.shape[1], "Matrix must be square"
+        self.matrix = matrix
+        self.n = matrix.shape[0]
+
+    def tridiagonalize(self) -> Tuple[np.ndarray, np.ndarray]:
+        """
+        Tridiagonalize the symmetric matrix using Householder transformations.
+
+        Returns:
+        - T (np.ndarray): The tridiagonal matrix.
+        - Q (np.ndarray): The orthogonal matrix used in the transformation.
+        """
+        T = self.matrix.copy()
+        Q = np.eye(self.n)
+
+        for k in range(self.n - 2):
+            x = T[k+1:, k]
+            e1 = np.zeros_like(x)
+            e1[0] = np.linalg.norm(x) if x[0] == 0 else np.sign(x[0]) * np.linalg.norm(x)
+            u = x + e1
+            u = u / np.linalg.norm(u)
+
+            H = np.eye(self.n)
+            H[k+1:, k+1:] -= 2.0 * np.outer(u, u)
+
+            T = H @ T @ H
+            Q = Q @ H
+
+        return T, Q
+
+    def qr_algorithm(self, T: np.ndarray, max_iterations: int = 1000, tol: float = 1e-10) -> Tuple[np.ndarray, np.ndarray]:
+        """
+        Perform the QR algorithm with shifts to find the eigenvalues and eigenvectors of the tridiagonal matrix.
+
+        Args:
+        - T (np.ndarray): The tridiagonal matrix.
+        - max_iterations (int): The maximum number of iterations.
+        - tol (float): The tolerance for convergence.
+
+        Returns:
+        - eigenvalues (np.ndarray): The eigenvalues of the matrix.
+        - eigenvectors (np.ndarray): The eigenvectors of the matrix.
+        """
+        n = T.shape[0]
+        Q_total = np.eye(n)
+        
+        for _ in range(max_iterations):
+            if np.all(np.abs(T[np.arange(1, n), np.arange(n - 1)]) < tol):
+                break
+
+            mu = T[-1, -1]
+            Q, R = np.linalg.qr(T - mu * np.eye(n))
+            T = R @ Q + mu * np.eye(n)
+            Q_total = Q_total @ Q
+        
+        eigenvalues = np.diag(T)
+        return eigenvalues, Q_total
+
+    def solve(self) -> Tuple[np.ndarray, np.ndarray]:
+        """
+        Solve the eigenvalue problem for the symmetric matrix.
+
+        Returns:
+        - eigenvalues (np.ndarray): The eigenvalues of the matrix.
+        - eigenvectors (np.ndarray): The eigenvectors of the matrix.
+        """
+        T, Q = self.tridiagonalize()
+        eigenvalues, eigenvectors = self.qr_algorithm(T)
+        eigenvectors = Q @ eigenvectors
+        return eigenvalues, eigenvectors
+
+
+if __name__ == "__main__":
+    # 示例对称矩阵
+    symmetric_matrix = np.array([
+        [4, 1, 2],
+        [1, 2, 0],
+        [2, 0, 3]
+    ])
+
+    solver = SymmetricQRAlgorithm(symmetric_matrix)
+    eigenvalues, eigenvectors = solver.solve()
+
+    print("Eigenvalues:", eigenvalues)
+    print("Eigenvectors:\n", eigenvectors)
+</code></pre>
+  </div>
+</body>
+</html>
+  

@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>2.7.6 Invariant Subspace Computations</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>05_2.7.6_Invariant_Subspace_Computations</h1>
+<pre><code>
+Lecture: 2._Chapters/2.7_Unsymmetric_Eigenvalue_Problems
+Content: 05_2.7.6_Invariant_Subspace_Computations
+
+</code></pre>
+<h3>2.7.6 不变子空间计算极其详细分析</h3>
+<h4>引言</h4>
+<p>不变子空间（Invariant Subspace）在矩阵计算和特征值问题中具有重要作用。了解和计算不变子空间有助于简化复杂矩阵的特征值问题，并在许多科学和工程应用中提供高效解决方案。</p>
+<h4>什么是不变子空间</h4>
+<p>一个矩阵 $ A $ 的不变子空间 $ \mathcal{V} $ 是一个线性子空间，使得 $ \mathcal{V} $ 在 $ A $ 的作用下仍然是 $ \mathcal{V} $ 的子空间。即，对于 $ \mathcal{V} $ 中的任意向量 $ \mathbf{v} $，矩阵 $ A $ 作用于 $ \mathbf{v} $ 后的向量仍在 $ \mathcal{V} $ 中。</p>
+<h4>不变子空间的计算</h4>
+<p>计算不变子空间通常依赖于Schur分解或QR算法。Schur分解将矩阵分解为上三角形式，而QR算法通过迭代方法实现特征值的逐步逼近。这些方法在计算不变子空间时提供了有效的工具。</p>
+<h4>具体步骤</h4>
+<ol>
+<li>
+<p><strong>Schur分解</strong></p>
+<ul>
+<li>Schur分解是将矩阵 $ A $ 分解为正交矩阵 $ Q $ 和上三角矩阵 $ T $ 的乘积，即 $ A = QTQ^T $。</li>
+<li>上三角矩阵 $ T $ 的对角元素为矩阵 $ A $ 的特征值。</li>
+<li>不变子空间的计算基于上三角矩阵 $ T $ 和正交矩阵 $ Q $。</li>
+</ul>
+</li>
+<li>
+<p><strong>Bartels-Stewart算法</strong></p>
+<ul>
+<li>Bartels-Stewart算法用于求解Sylvester方程 $ AX - XB = C $，其中 $ A $ 和 $ B $ 为上三角矩阵，$ C $ 为已知矩阵。</li>
+<li>通过Bartels-Stewart算法，可以计算不变子空间的基。</li>
+</ul>
+</li>
+<li>
+<p><strong>QR迭代</strong></p>
+<ul>
+<li>QR迭代通过反复进行QR分解，将矩阵逐步逼近上三角矩阵。</li>
+<li>通过位移策略和隐式Q定理，QR迭代提高了计算效率和稳定性。</li>
+</ul>
+</li>
+</ol>
+<h4>数值稳定性</h4>
+<p>不变子空间计算的数值稳定性至关重要。正交变换和上三角矩阵形式保证了计算的稳定性，减少了舍入误差。尤其是在处理大规模矩阵时，选择合适的算法和数值方法可以显著提高计算精度和效率。</p>
+<h4>应用实例</h4>
+<p>不变子空间计算在实际中有广泛的应用：</p>
+<ol>
+<li><strong>控制系统</strong>：分析系统的稳定性，计算系统矩阵的不变子空间。</li>
+<li><strong>结构工程</strong>：计算建筑结构的模态，确定其固有频率。</li>
+<li><strong>量子力学</strong>：求解哈密顿量的特征态，计算物理系统的不变子空间。</li>
+</ol>
+<h4>数值例子</h4>
+<p>假设我们有一个矩阵 $ A $：
+$$
+A = \begin{bmatrix}
+4 &amp; 1 &amp; 2 \
+3 &amp; 4 &amp; 1 \
+1 &amp; 1 &amp; 3
+\end{bmatrix}
+$$</p>
+<p>通过以下步骤，我们可以计算其不变子空间：</p>
+<ol>
+<li><strong>Schur分解</strong>：将矩阵 $ A $ 分解为上三角矩阵 $ T $ 和正交矩阵 $ Q $。</li>
+<li><strong>Bartels-Stewart算法</strong>：求解相关的Sylvester方程，得到不变子空间的基。</li>
+<li><strong>验证</strong>：验证不变子空间的计算结果，确保其准确性和稳定性。</li>
+</ol>
+<h3>结论</h3>
+<p>不变子空间的计算在矩阵特征值问题中具有重要作用。通过理解和掌握Schur分解、QR迭代和Bartels-Stewart算法，可以高效地计算不变子空间。这些方法不仅提高了计算的效率和稳定性，还为许多科学和工程应用提供了强有力的工具。通过合理使用这些算法，可以在实际应用中解决复杂的矩阵计算问题，提高数值计算的精度和效率。</p>
+<hr>
+<h3>Bartels-Stewart 算法极其详细分析</h3>
+<h4>引言</h4>
+<p>Bartels-Stewart 算法是一种求解 Sylvester 方程的数值方法。Sylvester 方程在许多科学与工程问题中出现，形式为：
+$$ AX + XB = C $$
+其中，$ A $ 和 $ B $ 是已知矩阵，$ X $ 是待求解矩阵，$ C $ 是已知矩阵。Bartels-Stewart 算法通过将 $ A $ 和 $ B $ 转化为上三角形式，使得方程的求解变得简便和高效。</p>
+<h4>算法原理</h4>
+<p>Bartels-Stewart 算法基于 Schur 分解和矩阵方程的性质。其核心思想是将 Sylvester 方程转化为易于求解的形式，通过正交变换和矩阵分解实现高效计算。</p>
+<h4>具体步骤</h4>
+<p>Bartels-Stewart 算法的步骤包括：</p>
+<ol>
+<li>
+<p><strong>Schur 分解</strong>：</p>
+<ul>
+<li>对矩阵 $ A $ 和 $ B $ 分别进行 Schur 分解，得到：
+$$ A = Q_A T_A Q_A^T $$
+$$ B = Q_B T_B Q_B^T $$
+其中，$ Q_A $ 和 $ Q_B $ 是正交矩阵，$ T_A $ 和 $ T_B $ 是上三角矩阵。</li>
+</ul>
+</li>
+<li>
+<p><strong>变换 Sylvester 方程</strong>：</p>
+<ul>
+<li>使用 Schur 分解，将 Sylvester 方程变换为：
+$$ (Q_A T_A Q_A^T)X + X(Q_B T_B Q_B^T) = C $$</li>
+<li>通过正交变换，得到：
+$$ T_A \hat{X} + \hat{X} T_B = \hat{C} $$
+其中，$ \hat{X} = Q_A^T X Q_B $，$ \hat{C} = Q_A^T C Q_B $。</li>
+</ul>
+</li>
+<li>
+<p><strong>求解上三角 Sylvester 方程</strong>：</p>
+<ul>
+<li>由于 $ T_A $ 和 $ T_B $ 是上三角矩阵，方程 $ T_A \hat{X} + \hat{X} T_B = \hat{C} $ 可以逐块求解。具体步骤如下：
+<ul>
+<li>从最后一行开始，逐行向上求解。</li>
+<li>对于每一行，通过回代法求解线性方程组，得到对应的 $ \hat{X} $ 的元素。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>反变换得到解</strong>：</p>
+<ul>
+<li>最终通过正交变换得到矩阵 $ X $：
+$$ X = Q_A \hat{X} Q_B^T $$</li>
+</ul>
+</li>
+</ol>
+<h4>数值稳定性</h4>
+<p>Bartels-Stewart 算法的数值稳定性主要依赖于 Schur 分解的性质。由于 Schur 分解中的正交变换不会放大数值误差，因此算法具有较高的数值稳定性。此外，算法中逐块求解上三角方程组也减少了计算中的数值误差。</p>
+<h4>应用实例</h4>
+<p>Bartels-Stewart 算法在实际中有广泛应用，特别是在以下领域：</p>
+<ol>
+<li><strong>控制理论</strong>：求解状态反馈控制器和观测器设计中的矩阵方程。</li>
+<li><strong>结构工程</strong>：求解建筑结构的动态响应问题。</li>
+<li><strong>图像处理</strong>：求解图像复原和滤波中的线性方程组。</li>
+</ol>
+<h4>数值例子</h4>
+<p>假设我们有以下矩阵 $ A $、$ B $ 和 $ C $：
+$$
+A = \begin{bmatrix}
+4 &amp; 1 \
+3 &amp; 4
+\end{bmatrix}, \quad
+B = \begin{bmatrix}
+1 &amp; 2 \
+0 &amp; 3
+\end{bmatrix}, \quad
+C = \begin{bmatrix}
+7 &amp; 10 \
+6 &amp; 8
+\end{bmatrix}
+$$</p>
+<p>通过 Bartels-Stewart 算法求解 Sylvester 方程 $ AX + XB = C $：</p>
+<ol>
+<li>
+<p><strong>Schur 分解</strong>：</p>
+<ul>
+<li>对 $ A $ 进行 Schur 分解，得到 $ T_A = A $，因为 $ A $ 已经是上三角矩阵，$ Q_A = I $。</li>
+<li>对 $ B $ 进行 Schur 分解，得到 $ T_B = B $，因为 $ B $ 已经是上三角矩阵，$ Q_B = I $。</li>
+</ul>
+</li>
+<li>
+<p><strong>变换 Sylvester 方程</strong>：</p>
+<ul>
+<li>由于 $ Q_A $ 和 $ Q_B $ 都是单位矩阵，因此 $ \hat{C} = C $，方程变为：
+$$ A \hat{X} + \hat{X} B = C $$</li>
+</ul>
+</li>
+<li>
+<p><strong>逐块求解上三角 Sylvester 方程</strong>：</p>
+<ul>
+<li>从最后一行开始，逐行向上求解。</li>
+<li>对于 $ \hat{X} $ 的每一行，求解对应的线性方程组。</li>
+</ul>
+</li>
+<li>
+<p><strong>反变换得到解</strong>：</p>
+<ul>
+<li>因为 $ Q_A $ 和 $ Q_B $ 都是单位矩阵，所以 $ \hat{X} = X $。</li>
+</ul>
+</li>
+</ol>
+<p>最终求解得到矩阵 $ X $。</p>
+<h3>结论</h3>
+<p>Bartels-Stewart 算法通过 Schur 分解和逐块求解上三角方程组，高效地求解 Sylvester 方程。其数值稳定性和计算效率使其在许多科学与工程问题中得到广泛应用。通过详细分析 Bartels-Stewart 算法的步骤和原理，可以更好地理解和应用这一重要的数值方法。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 05_2.7.6_Invariant_Subspace_Computations
+
+"""
+
+Lecture: 2._Chapters/2.7_Unsymmetric_Eigenvalue_Problems
+Content: 05_2.7.6_Invariant_Subspace_Computations
+
+"""
+
+</code></pre>
+  </div>
+</body>
+</html>
+  

@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>2.8.5 Jacobi Methods</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>04_2.8.5_Jacobi_Methods</h1>
+<pre><code>
+Lecture: 2._Chapters/2.8_Symmetric_Eigenvalue_Problems
+Content: 04_2.8.5_Jacobi_Methods
+
+</code></pre>
+<h3>2.8.5 Jacobi 方法</h3>
+<h4>1. 简介</h4>
+<p>Jacobi 方法是一种经典的求解对称特征值问题的方法。由于其固有的并行特性，该方法在现代计算环境中仍然受到广泛关注。Jacobi 方法通过执行一系列正交相似性更新，使得每次新的矩阵更趋于对角矩阵。最终，矩阵的非对角元素变得足够小，可以被视为零。</p>
+<h4>2. Jacobi 方法的基本思想</h4>
+<p>Jacobi 方法的核心思想是系统地减少矩阵非对角元素的 Frobenius 范数。具体来说，通过旋转矩阵，使得矩阵的某些非对角元素逐步变为零，从而使得矩阵更接近于对角矩阵。</p>
+<h5>2.1 Jacobi 旋转</h5>
+<p>Jacobi 旋转是 Givens 旋转的一种形式，用于消除特定的非对角元素。设 $ J(p, q, \theta) $ 为 Jacobi 旋转矩阵，其形式如下：</p>
+<p>$$ J(p, q, \theta) = \begin{pmatrix}
+1 &amp; 0 &amp; \cdots &amp; 0 &amp; \cdots &amp; 0 &amp; \cdots &amp; 0 \
+0 &amp; 1 &amp; \cdots &amp; 0 &amp; \cdots &amp; 0 &amp; \cdots &amp; 0 \
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots &amp; \vdots &amp; \vdots &amp; \vdots &amp; \vdots \
+0 &amp; 0 &amp; \cdots &amp; c &amp; \cdots &amp; s &amp; \cdots &amp; 0 \
+\vdots &amp; \vdots &amp; \cdots &amp; -s &amp; \cdots &amp; c &amp; \cdots &amp; 0 \
+0 &amp; 0 &amp; \cdots &amp; 0 &amp; \cdots &amp; 0 &amp; \ddots &amp; 0 \
+\vdots &amp; \vdots &amp; \cdots &amp; 0 &amp; \cdots &amp; 0 &amp; \cdots &amp; 1 \
+\end{pmatrix} $$</p>
+<p>其中，$ c = \cos(\theta) $，$ s = \sin(\theta) $，$ p $ 和 $ q $ 是需要消去的非对角元素所在的行列。</p>
+<h5>2.2 2x2 对称 Schur 分解</h5>
+<p>在每一步 Jacobi 迭代中，选择一个非对角元素 $ a_{pq} $，并通过 Jacobi 旋转消除它。假设 $ a_{pq} \neq 0 $，则旋转角度 $ \theta $ 由下式确定：</p>
+<p>$$ \tan(2\theta) = \frac{2a_{pq}}{a_{qq} - a_{pp}} $$</p>
+<p>从而使得旋转后矩阵在位置 $ (p, q) $ 的元素为零。更新后的矩阵通过 $ B = J^T A J $ 计算得到，其中 $ J $ 为 Jacobi 旋转矩阵。</p>
+<h4>3. Jacobi 方法的收敛性</h4>
+<p>Jacobi 方法通过逐步消除矩阵的非对角元素，最终收敛到对角矩阵。该方法的收敛速度取决于选择消除非对角元素的策略。经典 Jacobi 方法每次选择最大的非对角元素进行消除，从而最大化每一步的收敛效果。</p>
+<h4>4. Jacobi 方法的变体</h4>
+<h5>4.1 循环 Jacobi 算法</h5>
+<p>循环 Jacobi 算法是一种改进的 Jacobi 方法，通过预先固定消除非对角元素的顺序来减少计算量。该算法在每一轮迭代中按照固定的顺序消除非对角元素，从而避免了在每一步中寻找最大非对角元素的计算开销。</p>
+<h5>4.2 阈值 Jacobi 方法</h5>
+<p>阈值 Jacobi 方法在经典 Jacobi 方法的基础上，通过引入一个阈值参数，在非对角元素小于该阈值时跳过消除操作，从而提高计算效率。该方法在保证收敛性的同时，显著减少了计算量。</p>
+<h4>5. Jacobi 方法的数值稳定性</h4>
+<p>Jacobi 方法具有良好的数值稳定性，特别是对于对称正定矩阵。通过每一步的正交变换，Jacobi 方法能够有效地避免数值误差的累积，从而保证计算结果的精度。</p>
+<h4>6. Jacobi 方法的实际应用</h4>
+<p>Jacobi 方法在科学计算和工程应用中具有广泛的应用。例如，在结构力学中，Jacobi 方法用于求解大规模对称刚度矩阵的特征值问题；在电子工程中，用于分析对称电路矩阵的模态特性。此外，Jacobi 方法还应用于统计分析、数据挖掘和机器学习中的协方差矩阵特征值分解等问题。</p>
+<h3>总结</h3>
+<p>Jacobi 方法作为求解对称特征值问题的一种重要方法，具有算法简单、并行性强和数值稳定性好的优点。通过对 Jacobi 方法的深入研究和改进，可以更高效地解决实际应用中的大规模特征值问题，推动科学计算和工程技术的发展。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 04_2.8.5_Jacobi_Methods
+
+"""
+
+Lecture: 2._Chapters/2.8_Symmetric_Eigenvalue_Problems
+Content: 04_2.8.5_Jacobi_Methods
+
+"""
+
+import numpy as np
+from typing import Tuple
+
+class JacobiEigenSolver:
+    def __init__(self, matrix: np.ndarray):
+        """
+        Initialize the JacobiEigenSolver with a given symmetric matrix.
+
+        Args:
+        - matrix (np.ndarray): The symmetric matrix to solve for eigenvalues and eigenvectors.
+        """
+        assert matrix.shape[0] == matrix.shape[1], "Matrix must be square"
+        assert np.allclose(matrix, matrix.T), "Matrix must be symmetric"
+        self.matrix = matrix
+        self.n = matrix.shape[0]
+
+    def _rotate(self, A: np.ndarray, p: int, q: int) -> np.ndarray:
+        """
+        Perform a Jacobi rotation to zero out the A[p, q] and A[q, p] elements.
+
+        Args:
+        - A (np.ndarray): The matrix to be rotated.
+        - p (int): The row index of the element to be zeroed out.
+        - q (int): The column index of the element to be zeroed out.
+
+        Returns:
+        - A (np.ndarray): The rotated matrix.
+        """
+        if A[p, q] != 0:
+            theta = (A[q, q] - A[p, p]) / (2 * A[p, q])
+            t = np.sign(theta) / (np.abs(theta) + np.sqrt(1 + theta ** 2))
+            c = 1 / np.sqrt(1 + t ** 2)
+            s = t * c
+        else:
+            c = 1
+            s = 0
+
+        for i in range(self.n):
+            if i != p and i != q:
+                Aip = c * A[i, p] - s * A[i, q]
+                Aiq = s * A[i, p] + c * A[i, q]
+                A[i, p] = Aip
+                A[i, q] = Aiq
+                A[p, i] = Aip
+                A[q, i] = Aiq
+
+        App = c ** 2 * A[p, p] + s ** 2 * A[q, q] - 2 * s * c * A[p, q]
+        Aqq = s ** 2 * A[p, p] + c ** 2 * A[q, q] + 2 * s * c * A[p, q]
+        Apq = 0
+
+        A[p, p] = App
+        A[q, q] = Aqq
+        A[p, q] = Apq
+        A[q, p] = Apq
+
+        return A
+
+    def solve(self, tol: float = 1e-10, max_iterations: int = 100) -> Tuple[np.ndarray, np.ndarray]:
+        """
+        Solve the eigenvalue problem using the Jacobi method.
+
+        Args:
+        - tol (float): Tolerance for convergence.
+        - max_iterations (int): Maximum number of iterations.
+
+        Returns:
+        - eigenvalues (np.ndarray): The eigenvalues of the matrix.
+        - eigenvectors (np.ndarray): The eigenvectors of the matrix.
+        """
+        A = self.matrix.copy()
+        V = np.eye(self.n)
+
+        for iteration in range(max_iterations):
+            off_diagonal_sum = np.sum(np.abs(A) - np.diag(np.abs(A)))
+            if off_diagonal_sum < tol:
+                break
+
+            for p in range(self.n - 1):
+                for q in range(p + 1, self.n):
+                    A = self._rotate(A, p, q)
+
+        eigenvalues = np.diag(A)
+        return eigenvalues, V
+
+# 示例对称矩阵
+symmetric_matrix = np.array([
+    [4, 1, 2],
+    [1, 2, 0],
+    [2, 0, 3]
+])
+
+solver = JacobiEigenSolver(symmetric_matrix)
+eigenvalues, eigenvectors = solver.solve()
+
+print("Eigenvalues:", eigenvalues)
+print("Eigenvectors:\n", eigenvectors)
+</code></pre>
+  </div>
+</body>
+</html>
+  

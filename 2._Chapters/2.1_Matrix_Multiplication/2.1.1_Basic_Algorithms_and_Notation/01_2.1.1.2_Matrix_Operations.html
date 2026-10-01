@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>2.1.1.2 Matrix Operations</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>01_2.1.1.2_Matrix_Operations</h1>
+<pre><code>
+Lecture: 2._Chapters/2.1_Matrix_Multiplication/2.1.1_Basic_Algorithms_and_Notation
+Content: 01_2.1.1.2_Matrix_Operations
+
+</code></pre>
+<h3>矩阵运算的详细分析</h3>
+<h4>一、矩阵运算的基本定义</h4>
+<p>矩阵运算在许多科学和工程领域中都有广泛应用。掌握矩阵的基本运算对于理解复杂的线性代数问题至关重要。基本的矩阵运算包括矩阵的转置、加法、标量乘法和矩阵乘法。</p>
+<h4>二、矩阵转置</h4>
+<ol>
+<li>
+<p><strong>定义</strong>：</p>
+<ul>
+<li>矩阵 $ A $ 的转置记为 $ A^T $。</li>
+<li>若 $ A $ 是 $ m \times n $ 矩阵，则 $ A^T $ 是 $ n \times m $ 矩阵。</li>
+<li>转置操作将矩阵的行和列互换。</li>
+</ul>
+</li>
+<li>
+<p><strong>表示</strong>：</p>
+<ul>
+<li>例如，若 $ A = \begin{pmatrix} 1 &amp; 2 \ 3 &amp; 4 \ 5 &amp; 6 \end{pmatrix} $，则 $ A^T = \begin{pmatrix} 1 &amp; 3 &amp; 5 \ 2 &amp; 4 &amp; 6 \end{pmatrix} $。</li>
+</ul>
+</li>
+</ol>
+<h4>三、矩阵加法</h4>
+<ol>
+<li>
+<p><strong>定义</strong>：</p>
+<ul>
+<li>两个相同维度的矩阵 $ A $ 和 $ B $ 的加法定义为 $ C = A + B $。</li>
+<li>其中 $ C_{ij} = A_{ij} + B_{ij} $。</li>
+</ul>
+</li>
+<li>
+<p><strong>条件</strong>：</p>
+<ul>
+<li>矩阵加法只有在两个矩阵维度相同时才有定义。</li>
+</ul>
+</li>
+<li>
+<p><strong>例子</strong>：</p>
+<ul>
+<li>若 $ A = \begin{pmatrix} 1 &amp; 2 \ 3 &amp; 4 \end{pmatrix} $ 和 $ B = \begin{pmatrix} 5 &amp; 6 \ 7 &amp; 8 \end{pmatrix} $，则 $ C = A + B = \begin{pmatrix} 6 &amp; 8 \ 10 &amp; 12 \end{pmatrix} $。</li>
+</ul>
+</li>
+</ol>
+<h4>四、标量乘法</h4>
+<ol>
+<li>
+<p><strong>定义</strong>：</p>
+<ul>
+<li>矩阵 $ A $ 与标量 $ a $ 的乘法定义为 $ C = aA $。</li>
+<li>其中 $ C_{ij} = a \cdot A_{ij} $。</li>
+</ul>
+</li>
+<li>
+<p><strong>例子</strong>：</p>
+<ul>
+<li>若 $ A = \begin{pmatrix} 1 &amp; 2 \ 3 &amp; 4 \end{pmatrix} $ 且 $ a = 2 $，则 $ C = 2A = \begin{pmatrix} 2 &amp; 4 \ 6 &amp; 8 \end{pmatrix} $。</li>
+</ul>
+</li>
+</ol>
+<h4>五、矩阵乘法</h4>
+<ol>
+<li>
+<p><strong>定义</strong>：</p>
+<ul>
+<li>若 $ A $ 是 $ m \times p $ 矩阵，$ B $ 是 $ p \times n $ 矩阵，则 $ C = AB $ 是 $ m \times n $ 矩阵，且 $ C_{ij} = \sum_{k=1}^{p} A_{ik} \cdot B_{kj} $。</li>
+</ul>
+</li>
+<li>
+<p><strong>性质</strong>：</p>
+<ul>
+<li>矩阵乘法是非交换的，即一般情况下 $ AB \neq BA $。</li>
+</ul>
+</li>
+<li>
+<p><strong>例子</strong>：</p>
+<ul>
+<li>若 $ A = \begin{pmatrix} 1 &amp; 2 \ 3 &amp; 4 \end{pmatrix} $ 和 $ B = \begin{pmatrix} 5 &amp; 6 \ 7 &amp; 8 \end{pmatrix} $，则 $ C = AB = \begin{pmatrix} 19 &amp; 22 \ 43 &amp; 50 \end{pmatrix} $。</li>
+</ul>
+</li>
+</ol>
+<h4>六、元素级操作</h4>
+<ol>
+<li>
+<p><strong>元素级乘法</strong>：</p>
+<ul>
+<li>符号 $ .* $ 表示元素级乘法。</li>
+<li>若 $ A $ 和 $ B $ 是同维度矩阵，则 $ C = A .* B $。</li>
+<li>其中 $ C_{ij} = A_{ij} \cdot B_{ij} $。</li>
+</ul>
+</li>
+<li>
+<p><strong>元素级除法</strong>：</p>
+<ul>
+<li>符号 $ ./ $ 表示元素级除法。</li>
+<li>若 $ A $ 和 $ B $ 是同维度矩阵且 $ B $ 的元素非零，则 $ C = A ./ B $。</li>
+<li>其中 $ C_{ij} = A_{ij} / B_{ij} $。</li>
+</ul>
+</li>
+</ol>
+<h4>七、矩阵向量乘法和gaxpy操作</h4>
+<ol>
+<li>
+<p><strong>矩阵-向量乘法</strong>：</p>
+<ul>
+<li>矩阵 $ A \in \mathbb{R}^{m \times n} $ 和向量 $ x \in \mathbb{R}^n $ 的乘法定义为 $ y = Ax $。</li>
+<li>其中 $ y \in \mathbb{R}^m $，且 $ y_i = \sum_{j=1}^n A_{ij} x_j $。</li>
+</ul>
+</li>
+<li>
+<p><strong>gaxpy操作</strong>：</p>
+<ul>
+<li>gaxpy 是 &quot;generalized axpy&quot; 的缩写。</li>
+<li>定义为 $ y = y + Ax $。</li>
+<li>其中 $ y_i = y_i + \sum_{j=1}^n A_{ij} x_j $。</li>
+</ul>
+</li>
+</ol>
+<h4>八、矩阵乘法的外积形式</h4>
+<ol>
+<li><strong>外积更新</strong>：
+<ul>
+<li>矩阵乘法的外积形式可以写成 $ C = C + xy^T $。</li>
+<li>例如，若 $ x = \begin{pmatrix} 1 \ 2 \end{pmatrix} $，$ y^T = \begin{pmatrix} 3 &amp; 4 \end{pmatrix} $，则 $ xy^T = \begin{pmatrix} 1 \ 2 \end{pmatrix} \begin{pmatrix} 3 &amp; 4 \end{pmatrix} = \begin{pmatrix} 3 &amp; 4 \ 6 &amp; 8 \end{pmatrix} $。</li>
+</ul>
+</li>
+</ol>
+<h4>九、复矩阵</h4>
+<ol>
+<li>
+<p><strong>复数矩阵</strong>：</p>
+<ul>
+<li>复数矩阵的向量空间记为 $ \mathbb{C}^{m \times n} $。</li>
+<li>矩阵的缩放、加法和乘法与实矩阵相同，但转置变为共轭转置。</li>
+</ul>
+</li>
+<li>
+<p><strong>复数向量</strong>：</p>
+<ul>
+<li>复数 $ n $ 维向量的向量空间记为 $ \mathbb{C}^n $。</li>
+<li>向量 $ x $ 和 $ y $ 的内积记为 $ s = x^H y $，其中 $ s = \sum_{i=1}^n (x_i * y_i) $。</li>
+</ul>
+</li>
+</ol>
+<h3>结论</h3>
+<p>通过详细分析矩阵的各种基本运算，可以更好地理解和掌握线性代数中的各种复杂计算。这些运算不仅是理论研究的重要基础，也是实际应用中解决问题的有效工具。通过系统地学习和应用这些运算，可以大大提高计算效率和精度。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 01_2.1.1.2_Matrix_Operations
+
+"""
+
+Lecture: 2._Chapters/2.1_Matrix_Multiplication/2.1.1_Basic_Algorithms_and_Notation
+Content: 01_2.1.1.2_Matrix_Operations
+
+"""
+
+</code></pre>
+  </div>
+</body>
+</html>
+  

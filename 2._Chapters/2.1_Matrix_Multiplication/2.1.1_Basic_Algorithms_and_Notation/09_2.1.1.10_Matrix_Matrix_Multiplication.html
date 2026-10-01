@@ -1,0 +1,172 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>2.1.1.10 Matrix Matrix Multiplication</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>09_2.1.1.10_Matrix-Matrix_Multiplication</h1>
+<pre><code>
+Lecture: 2._Chapters/2.1_Matrix_Multiplication/2.1.1_Basic_Algorithms_and_Notation
+Content: 09_2.1.1.10_Matrix-Matrix_Multiplication
+
+</code></pre>
+<h3>矩阵乘法的详细分析</h3>
+<h4>一、矩阵乘法的基本概念</h4>
+<ol>
+<li>
+<p><strong>定义</strong>：</p>
+<ul>
+<li>矩阵乘法是线性代数中的一种基本运算，表示为 $ C = AB $，其中 $ A \in \mathbb{R}^{m \times n} $，$ B \in \mathbb{R}^{n \times p} $，结果矩阵 $ C \in \mathbb{R}^{m \times p} $。</li>
+<li>公式：$ C_{ij} = \sum_{k=1}^{n} A_{ik} B_{kj} $。</li>
+</ul>
+</li>
+<li>
+<p><strong>计算步骤</strong>：</p>
+<ul>
+<li>对于每个 $ i $ 从 1 到 $ m $，对于每个 $ j $ 从 1 到 $ p $，计算 $ C_{ij} $，即对 $ k $ 从 1 到 $ n $ 累加 $ A_{ik} B_{kj} $。</li>
+</ul>
+</li>
+<li>
+<p><strong>计算复杂度</strong>：</p>
+<ul>
+<li>矩阵乘法涉及 $ m \times n \times p $ 次乘法和加法。</li>
+<li>这是一个 $ O(mnp) $ 的运算。</li>
+</ul>
+</li>
+</ol>
+<h4>二、矩阵乘法的不同实现方式</h4>
+<ol>
+<li>
+<p><strong>点积形式 (Dot Product Formulation)</strong>：</p>
+<ul>
+<li>点积形式将每个 $ C $ 的元素看作是 $ A $ 的行向量与 $ B $ 的列向量的点积。</li>
+<li>公式：$ C_{ij} = \sum_{k=1}^{n} A_{ik} B_{kj} $。</li>
+</ul>
+</li>
+<li>
+<p><strong>saxpy 形式 (Saxpy Formulation)</strong>：</p>
+<ul>
+<li>saxpy 形式将矩阵乘法视为每一列 $ C $ 的线性组合。</li>
+<li>公式：$ C(:, j) = C(:, j) + A(:, k) \cdot B(k, j) $。</li>
+</ul>
+</li>
+<li>
+<p><strong>外积形式 (Outer Product Formulation)</strong>：</p>
+<ul>
+<li>外积形式将矩阵乘法视为外积的和。</li>
+<li>公式：$ C = C + A(:, k) \cdot B(k, :) $。</li>
+</ul>
+</li>
+</ol>
+<h4>三、矩阵乘法的计算优化</h4>
+<ol>
+<li>
+<p><strong>三重循环算法 (Triply Nested Loop Algorithm)</strong>：</p>
+<ul>
+<li>标准的三重循环算法通过三层嵌套循环计算矩阵乘法。</li>
+<li>例如，对于 $ ijk $ 顺序：<pre><code class="language-pseudo">for i = 1 to m
+    for j = 1 to p
+        C(i, j) = 0
+        for k = 1 to n
+            C(i, j) = C(i, j) + A(i, k) * B(k, j)
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>循环顺序的影响</strong>：</p>
+<ul>
+<li>矩阵乘法的不同循环顺序会影响计算的内存访问模式和效率。</li>
+<li>常见的六种顺序：ijk, jik, ikj, jki, kij, kji，每种顺序的内存访问模式不同。</li>
+</ul>
+</li>
+<li>
+<p><strong>块矩阵算法 (Block Matrix Algorithm)</strong>：</p>
+<ul>
+<li>块矩阵算法通过将矩阵划分为更小的子矩阵来提高计算效率，特别是在大规模矩阵运算中。</li>
+<li>例如，将 $ A $ 和 $ B $ 分别划分为子块，然后对子块进行乘法，最后合并结果。</li>
+</ul>
+</li>
+<li>
+<p><strong>Strassen 算法</strong>：</p>
+<ul>
+<li>Strassen 算法是一种快速矩阵乘法算法，通过减少乘法次数来提高效率。</li>
+<li>例如，$ 2 \times 2 $ 矩阵乘法可以通过 7 次乘法和 18 次加法实现，而不是常规的 8 次乘法和 4 次加法。</li>
+</ul>
+</li>
+</ol>
+<h4>四、矩阵乘法的应用</h4>
+<ol>
+<li>
+<p><strong>线性方程组的求解</strong>：</p>
+<ul>
+<li>矩阵乘法在求解线性方程组中广泛应用，如 $ Ax = b $ 的求解。</li>
+</ul>
+</li>
+<li>
+<p><strong>图像处理和计算机视觉</strong>：</p>
+<ul>
+<li>矩阵乘法用于图像变换和特征提取等操作。</li>
+</ul>
+</li>
+<li>
+<p><strong>机器学习和数据分析</strong>：</p>
+<ul>
+<li>矩阵乘法用于训练模型和处理大规模数据集。</li>
+</ul>
+</li>
+</ol>
+<h4>五、实际编程中的应用示例</h4>
+<ol>
+<li>
+<p><strong>MATLAB中的矩阵乘法</strong>：</p>
+<ul>
+<li>在MATLAB中，可以通过简单的语法进行矩阵乘法。</li>
+<li>示例代码：<pre><code class="language-matlab">A = [1, 2; 3, 4];
+B = [5, 6; 7, 8];
+C = A * B;
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Python中的矩阵乘法</strong>：</p>
+<ul>
+<li>在Python中，使用NumPy库可以方便地进行矩阵乘法。</li>
+<li>示例代码：<pre><code class="language-python">import numpy as np
+A = np.array([[1, 2], [3, 4]])
+B = np.array([[5, 6], [7, 8]])
+C = np.dot(A, B)
+</code></pre>
+</li>
+</ul>
+</li>
+</ol>
+
+    <h3>Python 文件</h3>
+    <pre><code># 09_2.1.1.10_Matrix-Matrix_Multiplication
+
+"""
+
+Lecture: 2._Chapters/2.1_Matrix_Multiplication/2.1.1_Basic_Algorithms_and_Notation
+Content: 09_2.1.1.10_Matrix-Matrix_Multiplication
+
+"""
+
+</code></pre>
+  </div>
+</body>
+</html>
+  

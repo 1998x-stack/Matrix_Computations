@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>2.6.5 Updating Matrix Factorizations</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>04_2.6.5_Updating_Matrix_Factorizations</h1>
+<pre><code>
+Lecture: 2._Chapters/2.6_Modified_Least_Squares_Problems_and_Methods
+Content: 04_2.6.5_Updating_Matrix_Factorizations
+
+</code></pre>
+<h3>详细分析矩阵分解的更新（Updating Matrix Factorizations）</h3>
+<p>在《Matrix Computations》一书的第6章，第6.5节对矩阵分解的更新进行了详细讨论。以下是对第2.6.5节“矩阵分解的更新”的详细分析：</p>
+<h4>1. 引言与背景</h4>
+<p>在许多应用中，矩阵 $ A $ 可能会经历小的修改，例如添加或删除一行或一列。这时，直接重新计算矩阵分解（如QR分解或Cholesky分解）会非常耗时。因此，开发有效的更新算法来调整现有分解以反映这些小修改是非常重要的。</p>
+<h4>2. QR分解的更新</h4>
+<p>QR分解是一种将矩阵 $ A $ 分解为正交矩阵 $ Q $ 和上三角矩阵 $ R $ 的方法。当矩阵 $ A $ 被修改时，我们可以使用Givens旋转和Householder反射来更新QR分解，而不需要从头计算。</p>
+<p><strong>算法6.5.1</strong>：添加或删除一行</p>
+<ol>
+<li>
+<p><strong>添加一行</strong>：假设有矩阵 $ A $ 的QR分解 $ A = QR $，需要计算新矩阵 $ A' = \begin{bmatrix} A \ u^T \end{bmatrix} $ 的QR分解。</p>
+<ul>
+<li>计算 $ w = Q^T u $。</li>
+<li>使用Givens旋转将 $ \begin{bmatrix} R \ w^T \end{bmatrix} $ 转化为上三角矩阵。</li>
+</ul>
+</li>
+<li>
+<p><strong>删除一行</strong>：假设有矩阵 $ A $ 的QR分解 $ A = QR $，需要计算去掉第 $ i $ 行后的矩阵的QR分解。</p>
+<ul>
+<li>使用Givens旋转将第 $ i $ 行的元素变为零，然后调整剩余部分使其保持上三角形结构。</li>
+</ul>
+</li>
+</ol>
+<h4>3. Cholesky分解的更新</h4>
+<p>Cholesky分解将正定矩阵 $ A $ 分解为下三角矩阵 $ L $ 和其转置的乘积。当矩阵 $ A $ 发生变化时，可以使用Givens旋转和双曲旋转（hyperbolic rotations）来更新分解。</p>
+<p><strong>算法6.5.4</strong>：Cholesky分解的更新与降更新</p>
+<ol>
+<li>
+<p><strong>更新</strong>：假设有矩阵 $ A $ 的Cholesky分解 $ A = LL^T $，需要计算 $ A' = A + uu^T $ 的Cholesky分解。</p>
+<ul>
+<li>使用Givens旋转将下三角矩阵 $ L $ 更新为新的Cholesky因子。</li>
+</ul>
+</li>
+<li>
+<p><strong>降更新</strong>：假设有矩阵 $ A $ 的Cholesky分解 $ A = LL^T $，需要计算 $ A' = A - zz^T $ 的Cholesky分解。</p>
+<ul>
+<li>使用双曲旋转将下三角矩阵 $ L $ 降更新为新的Cholesky因子。</li>
+</ul>
+</li>
+</ol>
+<h4>4. Rank-Revealing分解的更新</h4>
+<p>Rank-Revealing分解，如ULV分解，可以在矩阵经历低秩扰动时有效更新。这种分解通常比SVD更易于更新。</p>
+<p><strong>算法6.5.5</strong>：Rank-Revealing ULV分解的更新</p>
+<ol>
+<li><strong>ULV分解</strong>：将矩阵 $ A $ 分解为 $ A = ULV^T $，其中 $ U $ 和 $ V $ 是正交矩阵，$ L $ 是上三角矩阵。</li>
+<li><strong>更新</strong>：当矩阵 $ A $ 添加一行时，更新ULV分解，使其仍然是Rank-Revealing分解。</li>
+</ol>
+<h3>应用与扩展</h3>
+<ol>
+<li>
+<p><strong>信号处理</strong>：在自适应滤波器中，输入信号的统计特性可能随时间变化，因此需要更新滤波器的系数矩阵。这可以通过矩阵分解的更新算法实现，而不是每次都从头计算。</p>
+</li>
+<li>
+<p><strong>数据分析</strong>：在增量数据处理中，新的数据点不断加入到已有数据集中。使用矩阵分解的更新算法，可以高效地调整已有的分解结果，适应新增数据。</p>
+</li>
+<li>
+<p><strong>机器学习</strong>：在在线学习算法中，模型参数随着新数据的到来而更新。矩阵分解的更新算法可以帮助快速调整模型，保持高效的在线学习能力。</p>
+</li>
+</ol>
+<h3>结论</h3>
+<p>矩阵分解的更新在许多实际应用中具有重要意义。通过使用Givens旋转、Householder反射和双曲旋转等工具，可以有效地更新QR分解、Cholesky分解和Rank-Revealing分解，从而大大提高计算效率。这些技术在信号处理、数据分析和机器学习等领域都有广泛的应用。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 04_2.6.5_Updating_Matrix_Factorizations
+
+"""
+
+Lecture: 2._Chapters/2.6_Modified_Least_Squares_Problems_and_Methods
+Content: 04_2.6.5_Updating_Matrix_Factorizations
+
+"""
+
+import numpy as np
+from typing import Tuple
+
+class MatrixFactorizationUpdater:
+    """
+    矩阵分解更新类，包括QR分解和Cholesky分解的更新操作
+    """
+
+    @staticmethod
+    def update_qr_add_row(Q: np.ndarray, R: np.ndarray, u: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+        """
+        更新QR分解，添加一行
+
+        Args:
+            Q (np.ndarray): 原QR分解中的Q矩阵，形状为 (m, n)
+            R (np.ndarray): 原QR分解中的R矩阵，形状为 (n, n)
+            u (np.ndarray): 要添加的新行，形状为 (n,)
+
+        Returns:
+            Tuple[np.ndarray, np.ndarray]: 更新后的Q和R矩阵
+        """
+        m, n = Q.shape
+        u_hat = np.dot(Q.T, u)
+        u_residual = u - np.dot(Q, u_hat)
+        norm_residual = np.linalg.norm(u_residual)
+        if norm_residual > 1e-10:
+            q_new = u_residual / norm_residual
+            Q_new = np.column_stack((Q, q_new))
+            R_new = np.vstack((np.column_stack((R, u_hat)), np.append(np.zeros(n), norm_residual)))
+        else:
+            Q_new = Q
+            R_new = R
+        return Q_new, R_new
+
+    @staticmethod
+    def downdate_qr_remove_row(Q: np.ndarray, R: np.ndarray, row_index: int) -> Tuple[np.ndarray, np.ndarray]:
+        """
+        更新QR分解，删除一行
+
+        Args:
+            Q (np.ndarray): 原QR分解中的Q矩阵，形状为 (m, n)
+            R (np.ndarray): 原QR分解中的R矩阵，形状为 (n, n)
+            row_index (int): 要删除的行索引
+
+        Returns:
+            Tuple[np.ndarray, np.ndarray]: 更新后的Q和R矩阵
+        """
+        m, n = Q.shape
+        Q = np.delete(Q, row_index, axis=0)
+        R = np.delete(R, row_index, axis=0)
+        for i in range(row_index, m-1):
+            G = np.eye(n)
+            a, b = R[i, i], R[i+1, i]
+            r = np.hypot(a, b)
+            c, s = a / r, -b / r
+            G[i:i+2, i:i+2] = [[c, -s], [s, c]]
+            R = np.dot(G, R)
+            Q[:, i:i+2] = np.dot(Q[:, i:i+2], G.T)
+        return Q, R
+
+    @staticmethod
+    def update_cholesky(L: np.ndarray, u: np.ndarray) -> np.ndarray:
+        """
+        更新Cholesky分解，添加行
+
+        Args:
+            L (np.ndarray): 原Cholesky分解中的L矩阵，形状为 (n, n)
+            u (np.ndarray): 要添加的行，形状为 (n,)
+
+        Returns:
+            np.ndarray: 更新后的L矩阵
+        """
+        n = L.shape[0]
+        u_new = np.append(u, np.linalg.norm(u))
+        L_new = np.vstack((np.hstack((L, np.zeros((n, 1)))), u_new))
+        return L_new
+
+    @staticmethod
+    def downdate_cholesky(L: np.ndarray, row_index: int) -> np.ndarray:
+        """
+        更新Cholesky分解，删除行
+
+        Args:
+            L (np.ndarray): 原Cholesky分解中的L矩阵，形状为 (n, n)
+            row_index (int): 要删除的行索引
+
+        Returns:
+            np.ndarray: 更新后的L矩阵
+        """
+        L = np.delete(L, row_index, axis=0)
+        for i in range(row_index, L.shape[0]):
+            G = np.eye(L.shape[0])
+            a, b = L[i, i], L[i+1, i]
+            r = np.hypot(a, b)
+            c, s = a / r, -b / r
+            G[i:i+2, i:i+2] = [[c, -s], [s, c]]
+            L = np.dot(G, L)
+        return L
+
+def main():
+    """
+    主函数，用于示例矩阵分解的更新操作
+    """
+    # 示例QR分解的更新
+    A = np.array([
+        [12, -51, 4],
+        [6, 167, -68],
+        [-4, 24, -41]
+    ], dtype=float)
+    Q, R = np.linalg.qr(A)
+    u = np.array([1, 2, 3], dtype=float)
+
+    print("原始矩阵 A 的 QR 分解:")
+    print("Q:\n", Q)
+    print("R:\n", R)
+
+    Q_new, R_new = MatrixFactorizationUpdater.update_qr_add_row(Q, R, u)
+    print("\n添加一行后的 QR 分解:")
+    print("Q:\n", Q_new)
+    print("R:\n", R_new)
+
+    Q_downdated, R_downdated = MatrixFactorizationUpdater.downdate_qr_remove_row(Q, R, 1)
+    print("\n删除一行后的 QR 分解:")
+    print("Q:\n", Q_downdated)
+    print("R:\n", R_downdated)
+
+    # 示例Cholesky分解的更新
+    A = np.array([
+        [4, 2],
+        [2, 2]
+    ], dtype=float)
+    L = np.linalg.cholesky(A)
+    u = np.array([1, 1], dtype=float)
+
+    print("\n原始矩阵 A 的 Cholesky 分解:")
+    print("L:\n", L)
+
+    L_new = MatrixFactorizationUpdater.update_cholesky(L, u)
+    print("\n添加一行后的 Cholesky 分解:")
+    print("L:\n", L_new)
+
+    L_downdated = MatrixFactorizationUpdater.downdate_cholesky(L, 1)
+    print("\n删除一行后的 Cholesky 分解:")
+    print("L:\n", L_downdated)
+
+if __name__ == "__main__":
+    main()
+</code></pre>
+  </div>
+</body>
+</html>
+  

@@ -1,0 +1,215 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>2.8.7.1 Structured Quadratic Eigenvalue Problem</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>00_2.8.7.1_Structured_Quadratic_Eigenvalue_Problem</h1>
+<pre><code>
+Lecture: 2._Chapters/2.8_Symmetric_Eigenvalue_Problems/2.8.7_Generalized_Eigenvalue_Problems_with_Symmetry
+Content: 00_2.8.7.1_Structured_Quadratic_Eigenvalue_Problem
+
+</code></pre>
+<h3>2.8.7.1 结构化二次特征值问题</h3>
+<h4>1. 引言</h4>
+<p>二次特征值问题（QEP）在许多科学和工程应用中都有广泛的应用，包括振动分析、控制理论和电力系统等领域。具体来说，QEP涉及求解如下形式的特征值问题：</p>
+<p>$$ (λ^2M + λC + K)x = 0 $$</p>
+<p>其中，$ M $、$ C $ 和 $ K $ 是给定的方阵，λ 是特征值，$ x $ 是对应的特征向量。解决这些问题的关键是如何有效地处理和求解这些矩阵方程 。</p>
+<h4>2. 二次特征值问题的定义</h4>
+<p>二次特征值问题可以表示为：</p>
+<p>$$ Q(λ) = λ^2M + λC + K $$</p>
+<p>其中，矩阵 $ M $、$ C $ 和 $ K $ 分别代表系统的质量、阻尼和刚度矩阵。QEP的目标是找到所有的特征值 λ 以及对应的特征向量 x，使得上述方程成立 。</p>
+<h4>3. 线性化方法</h4>
+<p>为了求解二次特征值问题，通常使用线性化的方法，将二次问题转换为线性特征值问题。常见的线性化方法包括以下几种：</p>
+<h5>3.1 标准线性化</h5>
+<p>通过引入新的变量 $ y = λx $，可以将原问题转换为如下形式的线性特征值问题：</p>
+<p>$$ \begin{pmatrix}
+0 &amp; I \
+-K &amp; -C
+\end{pmatrix}
+\begin{pmatrix}
+x \
+y
+\end{pmatrix}
+= λ
+\begin{pmatrix}
+I &amp; 0 \
+0 &amp; M
+\end{pmatrix}
+\begin{pmatrix}
+x \
+y
+\end{pmatrix} $$</p>
+<p>其中，$ I $ 是单位矩阵。</p>
+<h5>3.2 对称线性化</h5>
+<p>在某些应用中，矩阵 $ M $ 和 $ C $ 是对称且正定的，而矩阵 $ K $ 是对称且半正定的。这时，可以通过适当的变换，使得线性化后的矩阵保持对称性，从而利用对称矩阵的特性提高计算效率。具体形式如下：</p>
+<p>$$ \begin{pmatrix}
+-K &amp; 0 \
+0 &amp; M
+\end{pmatrix}
+\begin{pmatrix}
+x \
+λx
+\end{pmatrix}
+= λ
+\begin{pmatrix}
+0 &amp; M \
+M &amp; C
+\end{pmatrix}
+\begin{pmatrix}
+x \
+λx
+\end{pmatrix} $$</p>
+<p>这种线性化方法在保持矩阵结构的同时，能够利用现有的高效算法求解对称特征值问题。</p>
+<h4>4. 特殊结构的二次特征值问题</h4>
+<p>在实际应用中，许多二次特征值问题具有特殊的结构，这些结构可以被利用来提高计算效率和数值稳定性。例如：</p>
+<h5>4.1 Hamiltonian 结构</h5>
+<p>在某些物理系统中，矩阵 $ M $ 是正定对称矩阵，矩阵 $ K $ 是对称矩阵，而矩阵 $ C $ 是反对称矩阵。这种情况下，特征值都是纯虚数，可以通过 Hamiltonian 结构的线性化方法有效求解：</p>
+<p>$$ \begin{pmatrix}
+0 &amp; M \
+-M &amp; -C
+\end{pmatrix}
+\begin{pmatrix}
+x \
+λx
+\end{pmatrix}
+= λ
+\begin{pmatrix}
+M &amp; 0 \
+0 &amp; K
+\end{pmatrix}
+\begin{pmatrix}
+x \
+λx
+\end{pmatrix} $$</p>
+<p>这种结构在控制理论和振动分析中非常常见。</p>
+<h5>4.2 palindromic 结构</h5>
+<p>对于一些特殊的机械系统，矩阵 $ K $ 和 $ M $ 互为转置，而矩阵 $ C $ 是对称矩阵，这种结构被称为 palindromic 结构。其线性化形式如下：</p>
+<p>$$ \begin{pmatrix}
+0 &amp; I \
+-K &amp; -C
+\end{pmatrix}
+\begin{pmatrix}
+x \
+λx
+\end{pmatrix}
+= λ
+\begin{pmatrix}
+I &amp; 0 \
+0 &amp; M
+\end{pmatrix}
+\begin{pmatrix}
+x \
+λx
+\end{pmatrix} $$</p>
+<p>这种结构的特征值成对出现，即如果 $ λ $ 是特征值，那么 $ 1/λ $ 也是特征值。</p>
+<h4>5. 数值算法</h4>
+<h5>5.1 广义特征值问题</h5>
+<p>线性化后得到的广义特征值问题可以通过已有的高效算法求解，如 QR 算法和 QZ 算法。这些算法能够处理大型稀疏矩阵，并具有良好的数值稳定性。</p>
+<h5>5.2 子空间方法</h5>
+<p>对于大规模问题，可以采用子空间方法，通过迭代计算逐步逼近特征值和特征向量。这类方法通常具有较好的收敛性和计算效率。</p>
+<h3>总结</h3>
+<p>二次特征值问题在科学和工程应用中具有重要地位，通过线性化方法可以将其转化为广义特征值问题，从而利用现有的高效算法求解。特别地，利用系统矩阵的特殊结构，可以进一步提高计算效率和数值稳定性。随着计算技术的不断发展，解决大规模二次特征值问题的方法和工具将不断完善和优化，为各类实际应用提供有力支持。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 00_2.8.7.1_Structured_Quadratic_Eigenvalue_Problem
+
+"""
+
+Lecture: 2._Chapters/2.8_Symmetric_Eigenvalue_Problems/2.8.7_Generalized_Eigenvalue_Problems_with_Symmetry
+Content: 00_2.8.7.1_Structured_Quadratic_Eigenvalue_Problem
+
+"""
+
+import numpy as np
+from scipy.linalg import eig
+
+class StructuredQEPSolver:
+    def __init__(self, M: np.ndarray, C: np.ndarray, K: np.ndarray):
+        """
+        初始化结构化二次特征值问题求解器。
+
+        Args:
+        - M (np.ndarray): 质量矩阵。
+        - C (np.ndarray): 阻尼矩阵。
+        - K (np.ndarray): 刚度矩阵。
+        """
+        assert M.shape == C.shape == K.shape, "所有输入矩阵必须具有相同的维度。"
+        self.M = M
+        self.C = C
+        self.K = K
+        self.n = M.shape[0]
+
+    def linearize(self) -> Tuple[np.ndarray, np.ndarray]:
+        """
+        将二次特征值问题线性化为广义特征值问题。
+
+        Returns:
+        - A (np.ndarray): 广义特征值问题中的矩阵 A。
+        - B (np.ndarray): 广义特征值问题中的矩阵 B。
+        """
+        zero_matrix = np.zeros_like(self.M)
+        identity_matrix = np.eye(self.n)
+
+        A = np.block([
+            [zero_matrix, identity_matrix],
+            [-self.K, -self.C]
+        ])
+        
+        B = np.block([
+            [identity_matrix, zero_matrix],
+            [zero_matrix, self.M]
+        ])
+
+        return A, B
+
+    def solve(self) -> Tuple[np.ndarray, np.ndarray]:
+        """
+        求解结构化二次特征值问题，返回特征值和特征向量。
+
+        Returns:
+        - eigenvalues (np.ndarray): 特征值。
+        - eigenvectors (np.ndarray): 特征向量。
+        """
+        A, B = self.linearize()
+        eigenvalues, eigenvectors = eig(A, B)
+        return eigenvalues, eigenvectors
+
+# 示例矩阵
+M = np.array([
+    [2, 0],
+    [0, 1]
+])
+
+C = np.array([
+    [0.1, 0.2],
+    [0.2, 0.3]
+])
+
+K = np.array([
+    [4, 1],
+    [1, 3]
+])
+
+solver = StructuredQEPSolver(M, C, K)
+eigenvalues, eigenvectors = solver.solve()
+
+print("Eigenvalues:\n", eigenvalues)
+print("Eigenvectors:\n", eigenvectors)
+</code></pre>
+  </div>
+</body>
+</html>
+  

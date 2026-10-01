@@ -1,0 +1,261 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>2.7.5 The Practical QR Algorithm</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>04_2.7.5_The_Practical_QR_Algorithm</h1>
+<pre><code>
+Lecture: 2._Chapters/2.7_Unsymmetric_Eigenvalue_Problems
+Content: 04_2.7.5_The_Practical_QR_Algorithm
+
+</code></pre>
+<h3>2.7.5 实用QR算法详细分析</h3>
+<h4>引言</h4>
+<p>实用QR算法（Practical QR Algorithm）是求解非对称矩阵特征值问题的一种高效方法。它在计算过程中结合了Hessenberg形式和QR迭代法，通过一系列优化步骤，使得计算特征值和特征向量更加高效和稳定。</p>
+<h4>数学原理</h4>
+<p>QR算法的核心思想是通过一系列正交变换，将矩阵逼近上三角矩阵。实用QR算法在此基础上引入了位移策略和隐式Q定理，进一步提高了计算效率和数值稳定性。</p>
+<h4>实用QR算法步骤</h4>
+<ol>
+<li>
+<p><strong>Hessenberg变换</strong></p>
+<ul>
+<li>将矩阵 $ A $ 转化为Hessenberg形式 $ H $。这一步骤通过一系列的Householder变换实现。Hessenberg矩阵是几乎上三角的矩阵，这种形式简化了后续的QR分解步骤。</li>
+</ul>
+</li>
+<li>
+<p><strong>QR迭代</strong></p>
+<ul>
+<li>对Hessenberg矩阵 $ H $ 进行QR分解，得到 $ H = QR $，其中 $ Q $ 是正交矩阵，$ R $ 是上三角矩阵。</li>
+<li>更新矩阵 $ H $，令 $ H = RQ $。</li>
+<li>重复上述步骤，直到矩阵 $ H $ 收敛于上三角形式。</li>
+</ul>
+</li>
+<li>
+<p><strong>位移策略</strong></p>
+<ul>
+<li>为了加速收敛，引入位移 $ \mu $。即对矩阵 $ H $ 进行QR分解时，实际计算的是 $ H - \mu I $，然后再加回位移 $ \mu $。</li>
+<li>单位移（Single-shift）和双位移（Double-shift）策略是最常用的选择。</li>
+</ul>
+</li>
+<li>
+<p><strong>隐式Q定理</strong></p>
+<ul>
+<li>通过隐式Q定理，可以在不显式计算位移的情况下，实现与显式位移相同的效果。这大大减少了计算量，并提高了算法的数值稳定性。</li>
+</ul>
+</li>
+</ol>
+<h4>数值稳定性</h4>
+<p>实用QR算法在每一步迭代中都进行正交变换，这确保了数值计算的稳定性。通过位移策略和隐式Q定理，进一步减小了舍入误差的影响，提高了算法的精度。</p>
+<h4>实用QR算法的实现</h4>
+<p>以下是一个详细的算法描述，展示了如何通过Hessenberg变换和QR迭代，将矩阵转换为实Schur形式：</p>
+<ol>
+<li>
+<p><strong>初始矩阵</strong>：设定初始矩阵 $ A $。</p>
+</li>
+<li>
+<p><strong>Hessenberg变换</strong>：将 $ A $ 转化为Hessenberg形式 $ H $：
+$$
+H = Q_0^T A Q_0
+$$
+其中 $ Q_0 $ 是正交矩阵。</p>
+</li>
+<li>
+<p><strong>QR迭代</strong>：</p>
+<ul>
+<li>进行QR分解： $ H_k - \mu I = Q_k R_k $</li>
+<li>更新矩阵： $ H_{k+1} = R_k Q_k + \mu I $</li>
+<li>重复上述步骤，直到 $ H_k $ 收敛为上三角矩阵。</li>
+</ul>
+</li>
+<li>
+<p><strong>结果</strong></p>
+<ul>
+<li>最终得到的上三角矩阵 $ T $ 即为Schur形式。</li>
+<li>正交矩阵 $ Q $ 由所有QR分解中的 $ Q_k $ 的积得到。</li>
+</ul>
+</li>
+</ol>
+<h4>算法复杂度</h4>
+<p>实用QR算法的计算复杂度主要集中在QR分解和矩阵更新上。对于一个 $ n \times n $ 的矩阵，每次QR分解和矩阵更新的计算量约为 $ O(n^3) $。通过Hessenberg变换预处理，可以减少迭代次数，从而提高整体效率。</p>
+<h4>应用实例</h4>
+<p>实用QR算法在实际中有广泛的应用：</p>
+<ul>
+<li><strong>控制理论</strong>：用于分析系统的稳定性，通过计算系统矩阵的特征值来判断系统响应。</li>
+<li><strong>结构工程</strong>：用于计算建筑结构的固有频率和振型，帮助工程师进行结构设计和优化。</li>
+<li><strong>数值线性代数</strong>：在大规模数值模拟和计算中，实用QR算法提高了计算的稳定性和效率，特别是在处理大型稀疏矩阵时。</li>
+</ul>
+<h4>数值例子</h4>
+<p>考虑一个具体的数值例子，假设矩阵 $ A $ 为：
+$$
+A = \begin{bmatrix}
+4 &amp; 1 &amp; 2 \
+3 &amp; 4 &amp; 1 \
+1 &amp; 1 &amp; 3
+\end{bmatrix}
+$$</p>
+<p>通过以下步骤，将其转化为实Schur形式：</p>
+<ol>
+<li><strong>Hessenberg变换</strong>：通过Householder变换将 $ A $ 转化为Hessenberg矩阵 $ H $。</li>
+<li><strong>QR迭代</strong>：对Hessenberg矩阵 $ H $ 进行QR迭代，逐步逼近上三角矩阵 $ T $。</li>
+<li><strong>结果验证</strong>：验证 $ A \approx Q T Q^T $。</li>
+</ol>
+<h3>结论</h3>
+<p>实用QR算法通过结合Hessenberg变换、QR迭代、位移策略和隐式Q定理，提供了一种高效稳定的特征值计算方法。理解这些算法原理和实现步骤，对于从事数值线性代数研究和应用的人员具有重要意义。通过合理的预处理和数值技巧，可以显著提高QR迭代法的收敛速度和计算稳定性。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 04_2.7.5_The_Practical_QR_Algorithm
+
+"""
+
+Lecture: 2._Chapters/2.7_Unsymmetric_Eigenvalue_Problems
+Content: 04_2.7.5_The_Practical_QR_Algorithm
+
+"""
+
+import numpy as np
+from typing import Tuple
+
+
+def householder_transform(A: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+    """
+    对矩阵进行Householder变换，将其转化为Hessenberg形式。
+
+    Args:
+        A (np.ndarray): 输入矩阵。
+
+    Returns:
+        H (np.ndarray): Hessenberg形式的矩阵。
+        Q (np.ndarray): 正交矩阵。
+    """
+    m, n = A.shape
+    Q = np.eye(m)
+    H = A.copy()
+
+    for i in range(n-2):
+        x = H[i+1:, i]
+        e = np.zeros_like(x)
+        e[0] = np.linalg.norm(x) * (1 if x[0] == 0 else np.sign(x[0]))
+        u = x + e
+        u = u / np.linalg.norm(u)
+
+        H[i+1:, i:] -= 2 * np.outer(u, u @ H[i+1:, i:])
+        H[:, i+1:] -= 2 * np.outer(H[:, i+1:] @ u, u)
+        Q[i+1:] -= 2 * np.outer(u, u @ Q[i+1:])
+
+    return H, Q.T
+
+
+def qr_iteration(H: np.ndarray, max_iter: int = 1000, tol: float = 1e-10) -> Tuple[np.ndarray, np.ndarray]:
+    """
+    对Hessenberg矩阵进行QR迭代，逼近实Schur形式。
+
+    Args:
+        H (np.ndarray): Hessenberg形式的输入矩阵。
+        max_iter (int): 最大迭代次数。
+        tol (float): 收敛容差。
+
+    Returns:
+        T (np.ndarray): 上三角块状矩阵。
+        Q (np.ndarray): 正交矩阵。
+    """
+    n = H.shape[0]
+    Q_total = np.eye(n)
+
+    for _ in range(max_iter):
+        Q, R = np.linalg.qr(H)
+        H = R @ Q
+        Q_total = Q_total @ Q
+
+        # 检查收敛性
+        off_diagonal_norm = np.sum(np.abs(H[np.tril_indices(n, -1)]))
+        if off_diagonal_norm < tol:
+            break
+
+    return H, Q_total
+
+
+class PracticalQRAlgorithm:
+    """
+    实用QR算法类，用于计算矩阵的Schur形式。
+
+    Attributes:
+        A (np.ndarray): 输入矩阵。
+        T (np.ndarray): 上三角块状矩阵。
+        Q (np.ndarray): 正交矩阵。
+    """
+
+    def __init__(self, A: np.ndarray):
+        """
+        初始化PracticalQRAlgorithm类。
+
+        Args:
+            A (np.ndarray): 输入矩阵。
+        """
+        self.A = A
+        self.T = None
+        self.Q = None
+
+    def compute_schur_form(self) -> None:
+        """
+        计算输入矩阵的Schur形式。
+        """
+        # 转换为Hessenberg形式
+        H, Q = householder_transform(self.A)
+
+        # QR迭代
+        T, Q_schur = qr_iteration(H)
+
+        # 最终的正交矩阵
+        self.Q = Q @ Q_schur
+        self.T = T
+
+    def print_results(self) -> None:
+        """
+        打印计算结果。
+        """
+        if self.T is None or self.Q is None:
+            print("请先计算Schur形式。")
+        else:
+            print("原始矩阵 A:")
+            print(self.A)
+            print("\nSchur形式的上三角块状矩阵 T:")
+            print(self.T)
+            print("\n正交矩阵 Q:")
+            print(self.Q)
+            print("\n验证 A = Q T Q^T:")
+            print(np.allclose(self.A, self.Q @ self.T @ self.Q.T))
+
+
+def main():
+    """
+    主函数，用于测试PracticalQRAlgorithm类。
+    """
+    A = np.array([[4, 1, 2],
+                  [3, 4, 1],
+                  [1, 1, 3]], dtype=float)
+
+    qr_algo = PracticalQRAlgorithm(A)
+    qr_algo.compute_schur_form()
+    qr_algo.print_results()
+
+
+if __name__ == "__main__":
+    main()
+</code></pre>
+  </div>
+</body>
+</html>
+  

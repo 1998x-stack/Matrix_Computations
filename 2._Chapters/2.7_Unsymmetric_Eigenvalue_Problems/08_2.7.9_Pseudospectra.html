@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>2.7.9 Pseudospectra</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>08_2.7.9_Pseudospectra</h1>
+<pre><code>
+Lecture: 2._Chapters/2.7_Unsymmetric_Eigenvalue_Problems
+Content: 08_2.7.9_Pseudospectra
+
+</code></pre>
+<h3>2.7.9 Pseudospectra</h3>
+<h4>1. 伪谱的动机</h4>
+<p>在许多情况下，矩阵的特征值揭示了某个现象的本质。例如，对于一个正定矩阵 $A$，如果其谱半径 $p(A) &lt; 1$，则随着 $k \to \infty$，$|A^k|_2 \to 0$ 。然而，对于非正则矩阵，即使谱半径小于1，$|A^k|_2$ 也可能会在衰减之前显著增长，这揭示了经典特征值分析在非正则矩阵中信息有限 。伪谱分析和计算可以缩小这种差距。</p>
+<h4>2. 伪谱的定义</h4>
+<p>伪谱概念是特征值概念的推广。对于矩阵 $A$ 的 $\epsilon$-伪谱集 $ \Lambda_\epsilon(A) $ 定义为：
+$$ \Lambda_\epsilon(A) = { z \in \mathbb{C} : \sigma_{\min}(A - zI) \leq \epsilon } $$
+其中，$\sigma_{\min}$ 表示最小奇异值。如果 $\epsilon = 0$，那么 $\Lambda_0(A)$ 就是 $A$ 的特征值集合，即 $\Lambda(A)$  。</p>
+<p>等价定义包括利用矩阵的逆算子和邻近矩阵的特征值来表示伪谱，这些定义的等价性可以通过奇异值、2-范数和矩阵逆的基本性质验证 。</p>
+<h4>3. 伪谱的显示</h4>
+<p>伪谱是复平面的可视子集，因此图形显示在伪谱分析中具有关键作用。MATLAB 基于 Wright (2002) 开发的 Eigtool 系统可以生成既美观又信息丰富的伪谱图。这些伪谱图通常是等高线图，每条等高线显示与指定值的 $\epsilon$ 相关联的 $z$ 值 。</p>
+<h4>4. 基本性质</h4>
+<p>伪谱的基本性质包括：</p>
+<ul>
+<li>伪谱的平移和缩放：如果 $\alpha, \beta \in \mathbb{C}$ 且 $A \in \mathbb{C}^{n \times n}$，则 $\Lambda_{\epsilon}(\alpha I + \beta A) = \alpha + \beta \cdot \Lambda_{\epsilon}(A)$  。</li>
+<li>伪谱的保持性：一般相似变换会保留特征值，但不一定保留 $\epsilon$-伪特征值。然而，简单的包含性质仍然成立 。</li>
+<li>对角矩阵的 $\epsilon$-伪谱是 $\epsilon$-圆盘的并集：如果 $D = \text{diag}(\lambda_1, \ldots, \lambda_n)$，则 $\Lambda_{\epsilon}(D) = {\lambda_1, \ldots, \lambda_n} + \epsilon \cdot \mathbb{D}$，其中 $\mathbb{D}$ 是单位圆盘 。</li>
+<li>分块上三角矩阵的 $\epsilon$-伪谱：如果 $T$ 是一个具有方形对角块的2×2块上三角矩阵，则 $\Lambda_{\epsilon}(T_{11}) \cup \Lambda_{\epsilon}(T_{22}) \subseteq \Lambda_{\epsilon}(T)$ 。</li>
+</ul>
+<h4>5. 伪谱的计算</h4>
+<p>生成伪谱等高线图需要对 $\sigma_{\min}(zI - A)$ 进行足够准确的近似计算，这通常涉及在复平面网格上进行数千个 $z$ 值的计算。为了减少计算成本，可以采用以下策略：</p>
+<ol>
+<li>避免在 $\sigma_{\min}(zI - A)$ 缓慢变化的区域进行 SVD 类型计算。</li>
+<li>利用对角块的不可约性，通过选择合适的特征子空间来简化计算  。</li>
+<li>预计算 Schur 分解 $Q^H AQ = T$，并应用高效的 $\sigma_{\min}$ 算法来处理三角矩阵 。</li>
+</ol>
+<h4>6. $\epsilon$-伪谱横坐标和半径的计算</h4>
+<p>$\epsilon$-伪谱横坐标是伪谱边界上的最右点，定义为：
+$$ \alpha_\epsilon(A) = \max { \Re(z) : z \in \Lambda_\epsilon(A) } $$</p>
+<p>$\epsilon$-伪谱半径是伪谱边界上的最大模点，定义为：
+$$ \rho_\epsilon(A) = \max { |z| : z \in \Lambda_\epsilon(A) } $$</p>
+<p>这些量在动态系统分析中非常重要。它们的有效迭代算法已经由 Burke、Lewis 和 Overton 提出  。</p>
+<h4>7. 矩阵幂和 $\epsilon$-伪谱半径</h4>
+<p>在某些情况下，矩阵的非正则性会导致其幂在衰减之前显著增长，这个现象在矩阵幂和 $\epsilon$-伪谱半径的分析中有所体现。例如，对于矩阵 $A = \begin{pmatrix} 0.999 &amp; 1000 \ 0 &amp; 0.998 \end{pmatrix}$，尽管其谱半径 $p(A) &lt; 1$，但其幂可以在指数衰减之前显著增长 。伪谱分析能够更好地解释这种行为。</p>
+<h3>总结</h3>
+<p>伪谱提供了对非正则矩阵行为的深入理解，特别是在经典特征值分析失效的情况下。通过伪谱分析，我们可以更好地评估特征值和特征向量的可信度，并揭示矩阵在不同操作下的潜在行为。这对许多应用，如动态系统的稳定性分析和线性代数中的数值计算，具有重要意义。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 08_2.7.9_Pseudospectra
+
+"""
+
+Lecture: 2._Chapters/2.7_Unsymmetric_Eigenvalue_Problems
+Content: 08_2.7.9_Pseudospectra
+
+"""
+
+</code></pre>
+  </div>
+</body>
+</html>
+  

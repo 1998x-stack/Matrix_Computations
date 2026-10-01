@@ -1,0 +1,244 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>2.8.4 More Methods for Tridiagonal Problems</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>03_2.8.4_More_Methods_for_Tridiagonal_Problems</h1>
+<pre><code>
+Lecture: 2._Chapters/2.8_Symmetric_Eigenvalue_Problems
+Content: 03_2.8.4_More_Methods_for_Tridiagonal_Problems
+
+</code></pre>
+<h3>2.8.4 更多处理三对角问题的方法</h3>
+<h4>1. 引言</h4>
+<p>三对角矩阵在数值线性代数中具有重要意义，特别是在对称特征值问题中。由于其特殊结构，针对三对角矩阵的特征值和特征向量问题有许多高效的方法。这些方法不仅在理论上有深远意义，而且在实际计算中也得到了广泛应用。</p>
+<h4>2. 分段讨论</h4>
+<h5>2.1 二分法</h5>
+<p>二分法是一种高效的特征值计算方法，特别适用于需要计算部分特征值的情况。其基本思想是利用特征多项式的变化符号来缩小特征值的范围，从而逐步逼近特征值。具体步骤如下：</p>
+<ol>
+<li>
+<p><strong>特征多项式的递归定义</strong>：
+对于三对角矩阵 $ T $ ，其主子矩阵 $ T_r $ 的特征多项式 $ P_r(x) $ 可以递归地定义为：
+$$ P_r(x) = (\alpha_r - x)P_{r-1}(x) - \beta_{r-1}^2 P_{r-2}(x) $$
+其中 $ \alpha_r $ 和 $ \beta_{r-1} $ 分别是 $ T $ 的对角元素和次对角元素。</p>
+</li>
+<li>
+<p><strong>二分迭代</strong>：
+给定一个初始区间 $[y, z]$ ，如果 $ P_n(y) \cdot P_n(z) &lt; 0 $ ，则在此区间内存在一个特征值。通过不断二分该区间并检查多项式值的符号变化，可以逐步缩小特征值的范围，直到达到预定精度。</p>
+</li>
+</ol>
+<h5>2.2 Sturm 序列方法</h5>
+<p>Sturm 序列方法是一种经典的特征值计算方法，特别适用于确定特定顺序的特征值。其核心是利用 Sturm 序列的性质，通过符号变化计数来确定特征值的数量和位置。具体步骤如下：</p>
+<ol>
+<li>
+<p><strong>Sturm 序列的定义</strong>：
+Sturm 序列是一列多项式，其中每个多项式都是前两个多项式的余数。对于三对角矩阵 $ T $ 的特征多项式 $ P_n(x) $ ，其 Sturm 序列可以递归地定义。</p>
+</li>
+<li>
+<p><strong>符号变化计数</strong>：
+在给定区间 $[a, b]$ 内，利用 Sturm 序列的符号变化次数，可以确定该区间内特征值的个数。通过不断缩小区间并计数符号变化，可以精确找到特征值的位置。</p>
+</li>
+</ol>
+<h5>2.3 分而治之算法</h5>
+<p>分而治之算法是一种高效的特征值分解方法，特别适合并行计算。其基本思想是将矩阵分解为较小的子矩阵，分别求解这些子矩阵的特征值问题，然后合并结果。具体步骤如下：</p>
+<ol>
+<li>
+<p><strong>矩阵分解</strong>：
+将原始三对角矩阵 $ T $ 分解为两个较小的子矩阵 $ T_1 $ 和 $ T_2 $ ，分别计算这些子矩阵的特征值和特征向量。</p>
+</li>
+<li>
+<p><strong>结果合并</strong>：
+通过适当的矩阵操作，将子矩阵的特征值和特征向量合并，得到原始矩阵的特征值和特征向量。该过程可以通过并行计算显著提高效率。</p>
+</li>
+</ol>
+<h4>3. 数值算法的实现</h4>
+<p>为了有效地实现这些方法，需要注意以下几点：</p>
+<ol>
+<li>
+<p><strong>初始区间选择</strong>：
+在二分法和 Sturm 序列方法中，初始区间的选择对收敛速度有重要影响。通常可以通过 Gershgorin 圆盘定理或其他先验知识来选择合理的初始区间。</p>
+</li>
+<li>
+<p><strong>数值稳定性</strong>：
+在计算过程中，数值稳定性是一个关键问题。需要使用高精度算法和数值稳定的矩阵操作，以避免舍入误差对结果的影响。</p>
+</li>
+<li>
+<p><strong>并行计算</strong>：
+对于大型矩阵，分而治之算法特别适合并行实现。可以利用现代高性能计算平台，将计算任务分配到多个处理器上，以显著提高计算效率。</p>
+</li>
+</ol>
+<h4>4. 实际应用</h4>
+<p>这些方法广泛应用于科学计算和工程领域。例如，在量子力学中，用于求解大规模 Hamiltonian 矩阵的特征值；在结构工程中，用于分析大型结构的振动模态；在数据分析和机器学习中，用于主成分分析和特征降维等问题。</p>
+<h3>总结</h3>
+<p>处理三对角矩阵特征值问题的多种方法在数值线性代数中具有重要地位。通过深入研究这些方法的原理和实现技术，可以更高效地解决实际应用中的大规模特征值问题，推动科学计算和工程技术的发展。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 03_2.8.4_More_Methods_for_Tridiagonal_Problems
+
+"""
+
+Lecture: 2._Chapters/2.8_Symmetric_Eigenvalue_Problems
+Content: 03_2.8.4_More_Methods_for_Tridiagonal_Problems
+
+"""
+
+import numpy as np
+from typing import Callable, Tuple, List
+
+class SymmetricEigenSolver:
+    def __init__(self, diagonal: np.ndarray, off_diagonal: np.ndarray):
+        """
+        Initialize the symmetric tridiagonal eigenvalue solver.
+
+        Args:
+        - diagonal (np.ndarray): Main diagonal elements of the tridiagonal matrix.
+        - off_diagonal (np.ndarray): Off-diagonal elements of the tridiagonal matrix.
+        """
+        self.diagonal = diagonal
+        self.off_diagonal = off_diagonal
+        self.n = len(diagonal)
+    
+    def solve_using_bisection(self, tolerance: float = 1e-6) -> Tuple[np.ndarray, np.ndarray]:
+        """
+        Solve the symmetric tridiagonal eigenvalue problem using the bisection method.
+
+        Args:
+        - tolerance (float): Tolerance for convergence.
+
+        Returns:
+        - eigenvalues (np.ndarray): Array of eigenvalues.
+        - eigenvectors (np.ndarray): Array of corresponding eigenvectors.
+        """
+        def eigenvalue_function(x: float) -> float:
+            """
+            Compute the value of the characteristic polynomial at x.
+
+            Args:
+            - x (float): Input value.
+
+            Returns:
+            - value (float): Value of the polynomial at x.
+            """
+            b = self.diagonal - x
+            d = np.ones(self.n)
+            d[1:] -= (self.off_diagonal ** 2) / b[:-1]
+            return np.linalg.norm(d, ord=np.inf)
+
+        eigenvalues = np.zeros(self.n)
+        eigenvectors = np.zeros((self.n, self.n))
+
+        # Perform bisection for each eigenvalue
+        for i in range(self.n):
+            a, b = np.min(self.diagonal), np.max(self.diagonal)
+            while b - a > tolerance:
+                mid = (a + b) / 2.0
+                if eigenvalue_function(mid) < tolerance:
+                    b = mid
+                else:
+                    a = mid
+            eigenvalues[i] = (a + b) / 2.0
+            eigenvectors[:, i] = self._compute_eigenvector(eigenvalues[i])
+
+        return eigenvalues, eigenvectors
+
+    def _compute_eigenvector(self, eigenvalue: float) -> np.ndarray:
+        """
+        Compute the eigenvector corresponding to a given eigenvalue.
+
+        Args:
+        - eigenvalue (float): Eigenvalue.
+
+        Returns:
+        - eigenvector (np.ndarray): Eigenvector.
+        """
+        b = self.diagonal - eigenvalue
+        eigenvector = np.ones(self.n)
+        for i in range(1, self.n):
+            eigenvector[i] = self.off_diagonal[i-1] / np.sqrt(b[i-1])
+        eigenvector /= np.linalg.norm(eigenvector)
+        return eigenvector
+
+    def solve_using_sturm_sequence(self) -> Tuple[np.ndarray, np.ndarray]:
+        """
+        Solve the symmetric tridiagonal eigenvalue problem using Sturm sequence method.
+
+        Returns:
+        - eigenvalues (np.ndarray): Array of eigenvalues.
+        - eigenvectors (np.ndarray): Array of corresponding eigenvectors.
+        """
+        def count_eigenvalues(x: float) -> int:
+            """
+            Count the number of eigenvalues less than x.
+
+            Args:
+            - x (float): Input value.
+
+            Returns:
+            - count (int): Number of eigenvalues less than x.
+            """
+            sturm_sequence = np.zeros(self.n + 1)
+            sturm_sequence[0] = 1
+            sturm_sequence[1] = self.diagonal[0] - x
+
+            for i in range(2, self.n + 1):
+                sturm_sequence[i] = (self.diagonal[i-1] - x) * sturm_sequence[i-1] - (self.off_diagonal[i-2] ** 2) * sturm_sequence[i-2]
+                if sturm_sequence[i-1] == 0 and sturm_sequence[i] == 0:
+                    break
+
+            count = 0
+            for i in range(1, self.n + 1):
+                if sturm_sequence[i] * sturm_sequence[i-1] < 0:
+                    count += 1
+
+            return count
+
+        eigenvalues = np.zeros(self.n)
+        eigenvectors = np.zeros((self.n, self.n))
+
+        # Determine eigenvalues using Sturm sequence method
+        for i in range(self.n):
+            a, b = np.min(self.diagonal), np.max(self.diagonal)
+            while b - a > tolerance:
+                mid = (a + b) / 2.0
+                if count_eigenvalues(mid) < i + 1:
+                    a = mid
+                else:
+                    b = mid
+            eigenvalues[i] = (a + b) / 2.0
+            eigenvectors[:, i] = self._compute_eigenvector(eigenvalues[i])
+
+        return eigenvalues, eigenvectors
+
+# Example usage:
+if __name__ == "__main__":
+    # Example symmetric tridiagonal matrix
+    diagonal = np.array([2.0, 3.0, 4.0])
+    off_diagonal = np.array([1.0, 2.0])
+    
+    solver = SymmetricEigenSolver(diagonal, off_diagonal)
+    
+    # Solve using bisection method
+    eigenvalues_bisection, eigenvectors_bisection = solver.solve_using_bisection()
+    print("Eigenvalues (Bisection Method):", eigenvalues_bisection)
+    
+    # Solve using Sturm sequence method
+    eigenvalues_sturm, eigenvectors_sturm = solver.solve_using_sturm_sequence()
+    print("Eigenvalues (Sturm Sequence Method):", eigenvalues_sturm)
+</code></pre>
+  </div>
+</body>
+</html>
+  

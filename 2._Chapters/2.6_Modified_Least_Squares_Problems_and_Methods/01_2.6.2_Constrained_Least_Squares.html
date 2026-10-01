@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>2.6.2 Constrained Least Squares</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>01_2.6.2_Constrained_Least_Squares</h1>
+<pre><code>
+Lecture: 2._Chapters/2.6_Modified_Least_Squares_Problems_and_Methods
+Content: 01_2.6.2_Constrained_Least_Squares
+
+</code></pre>
+<h3>详细分析约束最小二乘问题</h3>
+<p>在《Matrix Computations》一书的第6章，第6.2节对约束最小二乘问题进行了详细讨论。以下是对第2.6.2节“约束最小二乘问题”的详细分析：</p>
+<h4>1. 引言与背景</h4>
+<p>在最小二乘问题中，有时需要在约束条件下最小化 $|Ax - b|_2$。例如，我们可能希望预测 $b$ 时要求 $x$ 为单位向量，或解定义的拟合函数在某些点具有预定值。这样的需求会导致带等式约束的最小二乘问题（LSE）。本节展示了如何使用QR分解、SVD和GSVD解决这些问题。</p>
+<h4>2. 在球面上的最小二乘问题</h4>
+<p>给定矩阵 $A \in \mathbb{R}^{m \times n}$、向量 $b \in \mathbb{R}^m$ 和正数 $\alpha \in \mathbb{R}$，我们考虑以下问题：
+$$ \min |Ax - b|_2^2 \quad \text{subject to} \quad |x|_2 \leq \alpha $$</p>
+<p>这是一个带有二次不等式约束的最小二乘问题（LSQI）。此问题与前面讨论的岭回归问题有关。当无约束最小范数解满足 $|x_{LS}|_2 \leq \alpha$ 时，它显然解决了上述问题。否则，解在约束球的边界上，通过拉格朗日乘子法可以求解。</p>
+<h4>3. 更一般的二次约束</h4>
+<p>更一般的版本是对一个任意超椭球面进行最小化：
+$$ \min |Ax - b|_2^2 \quad \text{subject to} \quad |Bx - d|_2 \leq \alpha $$
+其中 $A \in \mathbb{R}^{m_1 \times n}$、$b \in \mathbb{R}^{m_1}$、$B \in \mathbb{R}^{m_2 \times n}$、$d \in \mathbb{R}^{m_2}$ 和 $\alpha \geq 0$。通过GSVD，可以将这个问题转化为对角形式，便于求解。</p>
+<h4>4. 带等式约束的最小二乘问题</h4>
+<p>接下来考虑带等式约束的最小二乘问题：
+$$ \min |Ax - b|_2^2 \quad \text{subject to} \quad Bx = d $$
+其中 $A \in \mathbb{R}^{m_1 \times n}$、$B \in \mathbb{R}^{m_2 \times n}$、$b \in \mathbb{R}^{m_1}$ 和 $d \in \mathbb{R}^{m_2}$。假设 $A$ 和 $B$ 都满秩。可以通过QR分解将问题转化为不带约束的最小二乘问题进行求解。</p>
+<h4>5. 算法实现与分析</h4>
+<p><strong>算法6.2.1</strong>：球面上的最小二乘问题</p>
+<ol>
+<li>计算 $A$ 的SVD分解 $A = U\Sigma V^T$。</li>
+<li>形成向量 $\hat{b} = U^T b$ 并确定 $A$ 的秩 $r$。</li>
+<li>如果 $|x_{LS}|<em LS="">2 \leq \alpha$，则无约束最小范数解 $x</em>$ 即为所求解。</li>
+<li>否则，使用拉格朗日乘子法，求解边界上的约束优化问题。</li>
+</ol>
+<p><strong>算法6.2.2</strong>：带等式约束的最小二乘问题</p>
+<ol>
+<li>计算 $B^T$ 的QR分解 $B^T = QR$。</li>
+<li>解三角系统 $R^T y = d$。</li>
+<li>将矩阵 $A$ 变换为 $A \leftarrow AQ$，分解为 $A_1$ 和 $A_2$。</li>
+<li>最小化 $|A_2 z - (b - A_1 y)|_2$ 求得 $z$。</li>
+<li>最终解为 $x = Q_1 y + Q_2 z$。</li>
+</ol>
+<h3>结论</h3>
+<p>约束最小二乘问题在数值线性代数中具有重要应用。通过使用QR分解、SVD和GSVD，可以有效地解决这些问题，特别是在存在等式或不等式约束的情况下。理解和应用这些方法，可以在许多工程和科学计算问题中找到稳定且高效的解决方案。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 01_2.6.2_Constrained_Least_Squares
+
+"""
+
+Lecture: 2._Chapters/2.6_Modified_Least_Squares_Problems_and_Methods
+Content: 01_2.6.2_Constrained_Least_Squares
+
+"""
+
+import numpy as np
+from typing import Tuple
+
+class ConstrainedLeastSquares:
+    """
+    带约束的最小二乘问题求解器
+    """
+
+    def __init__(self, A: np.ndarray, b: np.ndarray, B: np.ndarray = None, d: np.ndarray = None):
+        """
+        初始化带约束的最小二乘问题求解器
+
+        Args:
+            A (np.ndarray): 系数矩阵 A，形状为 (m, n)
+            b (np.ndarray): 右侧向量 b，形状为 (m,)
+            B (np.ndarray, optional): 约束矩阵 B，形状为 (p, n)，默认为 None
+            d (np.ndarray, optional): 约束右侧向量 d，形状为 (p,)，默认为 None
+        """
+        self.A = A
+        self.b = b
+        self.B = B
+        self.d = d
+
+    def solve_lsqi(self, alpha: float) -> np.ndarray:
+        """
+        解带不等式约束的最小二乘问题
+
+        Args:
+            alpha (float): 约束范数
+
+        Returns:
+            np.ndarray: 解向量 x
+        """
+        U, s, VT = np.linalg.svd(self.A, full_matrices=False)
+        c = U.T @ self.b
+        w = np.divide(c[:s.size], s, where=s != 0)
+        x_ls = VT.T @ w
+
+        if np.linalg.norm(x_ls) <= alpha:
+            return x_ls
+
+        # 拉格朗日乘子法求解在约束边界上的解
+        def f(lambda_):
+            return np.sum((s**2 / (s**2 + lambda_)) * c**2) - alpha**2
+
+        lambda_ = self._find_root(f, 0, np.max(s)**2)
+        w = s / (s**2 + lambda_) * c
+        x_constrained = VT.T @ w
+        return x_constrained
+
+    def solve_lse(self) -> np.ndarray:
+        """
+        解带等式约束的最小二乘问题
+
+        Returns:
+            np.ndarray: 解向量 x
+        """
+        Q, R = np.linalg.qr(self.B.T)
+        p = self.B.shape[0]
+        Q1 = Q[:, :p]
+        Q2 = Q[:, p:]
+        
+        y = np.linalg.solve(R.T, self.d)
+        b_hat = self.b - self.A @ Q1 @ y
+        z = np.linalg.lstsq(self.A @ Q2, b_hat, rcond=None)[0]
+        x = Q1 @ y + Q2 @ z
+        return x
+
+    def _find_root(self, func, a, b, tol=1e-10) -> float:
+        """
+        使用二分法求解方程的根
+
+        Args:
+            func (callable): 方程
+            a (float): 区间左端点
+            b (float): 区间右端点
+            tol (float): 容差
+
+        Returns:
+            float: 方程的根
+        """
+        fa = func(a)
+        fb = func(b)
+        while (b - a) > tol:
+            c = (a + b) / 2
+            fc = func(c)
+            if fc == 0:
+                return c
+            elif fa * fc < 0:
+                b = c
+                fb = fc
+            else:
+                a = c
+                fa = fc
+        return (a + b) / 2
+
+# 示例用法
+if __name__ == "__main__":
+    # 带不等式约束的最小二乘问题
+    A = np.array([[1, 2], [3, 4], [5, 6]], dtype=float)
+    b = np.array([1, 2, 3], dtype=float)
+    alpha = 1.0
+    solver = ConstrainedLeastSquares(A, b)
+    x_lsqi = solver.solve_lsqi(alpha)
+    print("带不等式约束的最小二乘解 x_lsqi:")
+    print(x_lsqi)
+
+    # 带等式约束的最小二乘问题
+    B = np.array([[1, 0], [0, 1]], dtype=float)
+    d = np.array([1, 1], dtype=float)
+    solver = ConstrainedLeastSquares(A, b, B, d)
+    x_lse = solver.solve_lse()
+    print("带等式约束的最小二乘解 x_lse:")
+    print(x_lse)</code></pre>
+  </div>
+</body>
+</html>
+  

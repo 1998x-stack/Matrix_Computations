@@ -1,0 +1,270 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>2.5.4 Other Orthogonal Factorizations</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>03_2.5.4_Other_Orthogonal_Factorizations</h1>
+<pre><code>
+Lecture: 2._Chapters/2.5_Orthogonalization_and_Least_Squares
+Content: 03_2.5.4_Other_Orthogonal_Factorizations
+
+</code></pre>
+<h3>详细分析其他正交分解</h3>
+<p>在《Matrix Computations》一书的第5章，第5.4节详细讨论了各种其他正交分解。以下是对第2.5.4节“其他正交分解”的详细分析：</p>
+<h4>1. 完全正交分解</h4>
+<p>完全正交分解（Complete Orthogonal Decomposition）是一种改进的QR分解，它不仅能提供矩阵的上三角结构，还能揭示矩阵的秩、范围和零空间。完全正交分解将矩阵 $A$ 分解为两个正交矩阵 $U$ 和 $V$ 及一个块上三角矩阵 $T$，即：
+$$ U^T A V = \begin{pmatrix}
+T_{11} &amp; T_{12} \
+0 &amp; 0
+\end{pmatrix} $$
+其中，$T_{11}$ 是非奇异的上三角矩阵，块 $T_{12}$ 和下方的零矩阵分别与矩阵 $A$ 的秩相关。</p>
+<h4>2. UTV框架</h4>
+<p>UTV分解是一种结合了QR分解和奇异值分解（SVD）特性的正交分解，目的是在计算效率和矩阵秩、范围和零空间的揭示之间取得平衡。UTV分解将矩阵 $A$ 表示为：
+$$ U^T A V = T $$
+其中，$U$ 和 $V$ 是正交矩阵，$T$ 是上三角（URV分解）或下三角（ULV分解）矩阵。</p>
+<h4>3. 双对角化</h4>
+<p>双对角化（Bidiagonalization）是一种重要的双侧正交分解，特别是在数据压缩方面，它与SVD相媲美。双对角化将矩阵 $A$ 分解为：
+$$ U^T A V = B $$
+其中，$U$ 和 $V$ 是正交矩阵，$B$ 是双对角矩阵。这个分解常用于矩阵的奇异值计算，因为双对角矩阵形式在SVD计算中具有重要作用。</p>
+<h4>4. 数值秩与SVD</h4>
+<p>数值秩（Numerical Rank）问题通过SVD得到最清晰的揭示。对于一个矩阵 $A$，其SVD表示为 $A = U \Sigma V^T$，其中 $\Sigma$ 是奇异值对角矩阵。如果矩阵的秩为 $r$，则 $\Sigma$ 中只有前 $r$ 个奇异值非零，其余为零。数值计算中，因舍入误差可能导致所有奇异值非零，因此需要设定阈值，将小于阈值的奇异值视为零，以确定数值秩。</p>
+<h4>5. 列主元QR分解</h4>
+<p>列主元QR分解（QR with Column Pivoting）是一种改进的QR分解，通过列交换使得分解结果更适合揭示矩阵的秩。具体过程是使用Householder矩阵和列交换将矩阵分解为：
+$$ A\Pi = QR $$
+其中，$\Pi$ 是置换矩阵， $Q$ 是正交矩阵， $R$ 是上三角矩阵。通过这种方式，矩阵的列可以按重要性排序，从而更好地揭示矩阵的秩信息。</p>
+<h4>6. R-双对角化</h4>
+<p>R-双对角化（R-Bidiagonalization）方法首先将矩阵上三角化，然后再进行双对角化。这种方法在处理大规模矩阵时特别有效。具体步骤包括：</p>
+<ol>
+<li>对矩阵 $A$ 进行QR分解得到上三角矩阵 $R$。</li>
+<li>对上三角矩阵 $R$ 进行双对角化，得到双对角矩阵 $B$。</li>
+</ol>
+<h4>7. 实际应用</h4>
+<p>这些正交分解方法在许多实际应用中具有重要意义，例如：</p>
+<ul>
+<li><strong>秩揭示</strong>：通过这些分解方法，可以更准确地揭示矩阵的秩，从而在解决线性方程组和最小二乘问题时具有重要作用。</li>
+<li><strong>数据压缩</strong>：双对角化和SVD在数据压缩中具有重要应用，通过这些分解，可以将数据表示为较低秩的近似，从而减少存储和计算成本。</li>
+<li><strong>特征值和奇异值计算</strong>：这些正交分解方法在特征值和奇异值计算中具有重要作用，特别是在大规模矩阵的计算中，通过这些分解可以显著提高计算效率和准确性。</li>
+</ul>
+<h3>总结</h3>
+<p>其他正交分解方法通过引入更复杂的矩阵分解技术，不仅能够揭示矩阵的秩、范围和零空间，还能提高计算效率和准确性。这些方法在实际应用中广泛使用，通过深入理解和应用这些分解技术，可以显著提高数值计算的性能和稳定性。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 03_2.5.4_Other_Orthogonal_Factorizations
+
+"""
+
+Lecture: 2._Chapters/2.5_Orthogonalization_and_Least_Squares
+Content: 03_2.5.4_Other_Orthogonal_Factorizations
+
+"""
+
+import numpy as np
+from typing import Tuple, Union
+
+
+class CompleteOrthogonalDecomposition:
+    """
+    Complete Orthogonal Decomposition (COD) of a matrix A.
+    
+    Attributes:
+        A (np.ndarray): Input matrix A.
+        U (np.ndarray): Orthogonal matrix U.
+        V (np.ndarray): Orthogonal matrix V.
+        T (np.ndarray): Block upper triangular matrix T.
+    """
+    
+    def __init__(self, A: np.ndarray):
+        self.A = A
+        self.U, self.V, self.T = self.compute_cod()
+    
+    def compute_cod(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+        """
+        Compute the Complete Orthogonal Decomposition of matrix A.
+        
+        Returns:
+            U (np.ndarray): Orthogonal matrix U.
+            V (np.ndarray): Orthogonal matrix V.
+            T (np.ndarray): Block upper triangular matrix T.
+        """
+        # Perform computations to decompose A into U, V, T
+        U, s, Vt = np.linalg.svd(self.A)
+        rank = np.linalg.matrix_rank(self.A)
+        U1 = U[:, :rank]
+        V1 = Vt.T[:, :rank]
+        T = U1.T @ self.A @ V1
+        return U1, V1, T
+
+
+class UTVDecomposition:
+    """
+    UTV Decomposition of a matrix A.
+    
+    Attributes:
+        A (np.ndarray): Input matrix A.
+        U (np.ndarray): Orthogonal matrix U.
+        T (np.ndarray): Upper triangular matrix T.
+        V (np.ndarray): Orthogonal matrix V.
+    """
+    
+    def __init__(self, A: np.ndarray):
+        self.A = A
+        self.U, self.T, self.V = self.compute_utv()
+    
+    def compute_utv(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+        """
+        Compute the UTV Decomposition of matrix A.
+        
+        Returns:
+            U (np.ndarray): Orthogonal matrix U.
+            T (np.ndarray): Upper triangular matrix T.
+            V (np.ndarray): Orthogonal matrix V.
+        """
+        # Perform computations to decompose A into U, T, V
+        raise NotImplementedError("UTV Decomposition is not fully implemented yet.")
+        # Replace with actual implementation
+
+
+class Bidiagonalization:
+    """
+    Bidiagonalization of a matrix A.
+    
+    Attributes:
+        A (np.ndarray): Input matrix A.
+        U (np.ndarray): Orthogonal matrix U.
+        B (np.ndarray): Bidiagonal matrix B.
+        V (np.ndarray): Orthogonal matrix V.
+    """
+    
+    def __init__(self, A: np.ndarray):
+        self.A = A
+        self.U, self.B, self.V = self.compute_bidiagonalization()
+    
+    def compute_bidiagonalization(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+        """
+        Compute the Bidiagonalization of matrix A.
+        
+        Returns:
+            U (np.ndarray): Orthogonal matrix U.
+            B (np.ndarray): Bidiagonal matrix B.
+            V (np.ndarray): Orthogonal matrix V.
+        """
+        # Perform computations to compute U, B, V
+        raise NotImplementedError("Bidiagonalization is not fully implemented yet.")
+        # Replace with actual implementation
+
+
+class NumericalRank:
+    """
+    Compute the numerical rank of a matrix A using Singular Value Decomposition (SVD).
+    
+    Attributes:
+        A (np.ndarray): Input matrix A.
+        rank (int): Numerical rank of matrix A.
+    """
+    
+    def __init__(self, A: np.ndarray):
+        self.A = A
+        self.rank = self.compute_numerical_rank()
+    
+    def compute_numerical_rank(self) -> int:
+        """
+        Compute the numerical rank of matrix A.
+        
+        Returns:
+            rank (int): Numerical rank of matrix A.
+        """
+        # Perform computations to compute numerical rank
+        raise NotImplementedError("Numerical Rank computation is not fully implemented yet.")
+        # Replace with actual implementation
+
+
+class ColumnPivotedQR:
+    """
+    Column pivoted QR decomposition of a matrix A.
+    
+    Attributes:
+        A (np.ndarray): Input matrix A.
+        Q (np.ndarray): Orthogonal matrix Q.
+        R (np.ndarray): Upper triangular matrix R.
+        P (np.ndarray): Permutation matrix P.
+    """
+    
+    def __init__(self, A: np.ndarray):
+        self.A = A
+        self.Q, self.R, self.P = self.compute_column_pivoted_qr()
+    
+    def compute_column_pivoted_qr(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+        """
+        Compute the column pivoted QR decomposition of matrix A.
+        
+        Returns:
+            Q (np.ndarray): Orthogonal matrix Q.
+            R (np.ndarray): Upper triangular matrix R.
+            P (np.ndarray): Permutation matrix P.
+        """
+        # Perform computations to compute Q, R, P
+        raise NotImplementedError("Column pivoted QR decomposition is not fully implemented yet.")
+        # Replace with actual implementation
+
+
+class RBidiagonalization:
+    """
+    R-Bidiagonalization of a matrix A.
+    
+    Attributes:
+        A (np.ndarray): Input matrix A.
+        U (np.ndarray): Orthogonal matrix U.
+        B (np.ndarray): Bidiagonal matrix B.
+        V (np.ndarray): Orthogonal matrix V.
+    """
+    
+    def __init__(self, A: np.ndarray):
+        self.A = A
+        self.U, self.B, self.V = self.compute_r_bidiagonalization()
+    
+    def compute_r_bidiagonalization(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+        """
+        Compute the R-Bidiagonalization of matrix A.
+        
+        Returns:
+            U (np.ndarray): Orthogonal matrix U.
+            B (np.ndarray): Bidiagonal matrix B.
+            V (np.ndarray): Orthogonal matrix V.
+        """
+        # Perform computations to compute U, B, V
+        raise NotImplementedError("R-Bidiagonalization is not fully implemented yet.")
+        # Replace with actual implementation
+
+
+# Test cases
+if __name__ == "__main__":
+    # Test Complete Orthogonal Decomposition
+    A = np.random.rand(5, 5)
+    cod = CompleteOrthogonalDecomposition(A)
+    print("Complete Orthogonal Decomposition:")
+    print("U:\n", cod.U)
+    print("V:\n", cod.V)
+    print("T:\n", cod.T)
+    print()
+    
+    # Test Numerical Rank
+    nr = NumericalRank(A)
+    print("Numerical Rank of A:", nr.rank)
+</code></pre>
+  </div>
+</body>
+</html>
+  

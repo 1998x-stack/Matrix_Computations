@@ -1,0 +1,533 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>2.7.4 The Hessenberg and Real Schur Forms</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>03_2.7.4_The_Hessenberg_and_Real_Schur_Forms</h1>
+<pre><code>
+Lecture: 2._Chapters/2.7_Unsymmetric_Eigenvalue_Problems
+Content: 03_2.7.4_The_Hessenberg_and_Real_Schur_Forms
+
+</code></pre>
+<h3>第2.7.4节 Hessenberg和实Schur形式 (The Hessenberg and Real Schur Forms) 详细分析</h3>
+<p>本节详细讨论了Hessenberg形式和实Schur形式在处理非对称特征值问题中的应用。这两种形式是求解矩阵特征值问题的关键步骤，尤其在提高计算效率和稳定性方面具有重要作用。以下是对第2.7.4节内容的详细分析：</p>
+<h4>1. 引言</h4>
+<p>Hessenberg和实Schur形式是矩阵分解的重要工具。Hessenberg形式是一种简化矩阵的上三角形式，而实Schur形式则将矩阵进一步简化为上三角块状矩阵。这些分解在数值线性代数中广泛应用，特别是在求解特征值问题时。</p>
+<h4>2. Hessenberg形式</h4>
+<p>Hessenberg形式是矩阵的一种准上三角形式，其中所有主对角线以下的次对角线元素都为零。具体地，对于一个矩阵 $ A $，其Hessenberg形式 $ H $ 满足 $ H $ 的次对角线以下的元素全为零。</p>
+<ul>
+<li><strong>性质</strong>：Hessenberg形式保留了原矩阵的特征值。其计算主要通过Householder变换或Givens旋转实现。</li>
+<li><strong>计算方法</strong>：通过一系列相似变换将矩阵 $ A $ 转化为Hessenberg形式。具体算法包括对矩阵的每一列进行Householder反射，逐步消去次对角线以下的元素。</li>
+</ul>
+<h4>3. 实Schur形式</h4>
+<p>实Schur分解是将矩阵分解为一个正交矩阵和一个上三角块状矩阵的乘积。对于实数矩阵，实Schur形式中的上三角块可以是1x1或2x2块，后者对应于复特征值的共轭对。</p>
+<ul>
+<li><strong>性质</strong>：实Schur形式不仅简化了矩阵结构，还保留了矩阵的特征值信息。特别地，2x2块的形式使得我们可以直接读取复特征值的实部和虚部。</li>
+<li><strong>计算方法</strong>：实Schur分解通常通过QR算法实现。首先将矩阵转化为Hessenberg形式，然后通过QR迭代将其进一步简化为上三角块状形式。</li>
+</ul>
+<h4>4. QR迭代法</h4>
+<p>QR迭代法是计算Schur分解的核心算法。其基本思想是通过反复进行QR分解和重组，使矩阵逐步趋近于上三角形式。</p>
+<ul>
+<li><strong>步骤</strong>：
+<ol>
+<li>对矩阵 $ A $ 进行QR分解，得到 $ A = QR $。</li>
+<li>更新矩阵 $ A $，令 $ A = RQ $。</li>
+<li>重复上述步骤，直到矩阵 $ A $ 收敛于上三角形式。</li>
+</ol>
+</li>
+<li><strong>优化</strong>：在实际计算中，为提高效率，可以先将矩阵转化为Hessenberg形式。这减少了每次QR分解的计算复杂度，从 $ O(n^3) $ 降至 $ O(n^2) $。</li>
+</ul>
+<h4>5. 应用实例</h4>
+<p>Hessenberg和实Schur形式在许多实际问题中都有重要应用：</p>
+<ul>
+<li><strong>控制理论</strong>：系统的稳定性分析依赖于系统矩阵的特征值分布。通过Schur分解，可以高效地计算系统的特征值。</li>
+<li><strong>结构工程</strong>：在结构分析中，固有频率和模态分析需要计算大型稀疏矩阵的特征值，这时Hessenberg和Schur分解是重要工具。</li>
+<li><strong>数值计算</strong>：在大规模数值模拟和计算中，这些分解方法提高了计算的稳定性和效率。</li>
+</ul>
+<h4>6. 数值稳定性和效率</h4>
+<p>数值稳定性是Hessenberg和Schur分解中的关键问题。实际计算中，舍入误差可能导致结果的不稳定。通过合理的算法设计，如使用Householder变换和Givens旋转，可以有效减少误差累积，提高计算结果的精确性。</p>
+<h4>结论</h4>
+<p>第2.7.4节详细介绍了Hessenberg形式和实Schur形式的基本原理、计算方法及其在实际中的应用。这些方法在求解非对称特征值问题中发挥了重要作用。通过理解和掌握这些分解技术，我们可以更高效地处理复杂的矩阵计算问题，提高计算的稳定性和精确性。</p>
+<hr>
+<h3>Hessenberg 形式详解</h3>
+<h4>引言</h4>
+<p>Hessenberg 形式是一种特殊的矩阵形式，特别适用于求解非对称矩阵的特征值问题。它是一种准上三角矩阵，其中次对角线以下的元素全为零。这种形式在数值线性代数中具有重要意义，因为它大大简化了计算过程，提高了算法的效率和稳定性。</p>
+<h4>Hessenberg 矩阵定义</h4>
+<p>一个矩阵 $ H $ 被称为上 Hessenberg 矩阵，如果它满足以下条件：
+$$ h_{i,j} = 0 \quad \text{当} \quad i &gt; j+1 $$
+这意味着 $ H $ 是准上三角的，即在主对角线下仅有一个非零对角线，其余元素全为零。例如，一个 4x4 的上 Hessenberg 矩阵形式如下：
+$$
+H = \begin{bmatrix}
+h_{11} &amp; h_{12} &amp; h_{13} &amp; h_{14} \
+h_{21} &amp; h_{22} &amp; h_{23} &amp; h_{24} \
+0 &amp; h_{32} &amp; h_{33} &amp; h_{34} \
+0 &amp; 0 &amp; h_{43} &amp; h_{44}
+\end{bmatrix}
+$$</p>
+<h4>Hessenberg 矩阵的性质</h4>
+<ol>
+<li><strong>特征值不变性</strong>：Hessenberg 形式保留了原矩阵的特征值。这是因为 Hessenberg 变换是通过相似变换实现的，而相似变换不改变矩阵的特征值。</li>
+<li><strong>计算效率</strong>：由于 Hessenberg 矩阵的特殊结构，其上每个元素仅依赖于有限个元素，使得计算过程中的矩阵运算更为高效。</li>
+<li><strong>数值稳定性</strong>：通过 Hessenberg 形式进行特征值分解，可以减少计算过程中可能引入的数值误差，从而提高结果的稳定性和精确性。</li>
+</ol>
+<h4>Hessenberg 矩阵的计算方法</h4>
+<p>将一个一般矩阵 $ A $ 转换为 Hessenberg 形式通常通过一系列相似变换实现，这些变换主要包括 Householder 变换和 Givens 旋转。</p>
+<h5>1. Householder 变换</h5>
+<p>Householder 变换是一种常用的方法，通过构造一个 Householder 矩阵 $ P $ 来逐步将矩阵 $ A $ 的非零元素反射到次对角线以下。具体步骤如下：</p>
+<ol>
+<li><strong>选择反射向量</strong>：选择一个反射向量 $ v $ 使得 $ (I - 2vv^T)A $ 的次对角线以下的元素为零。</li>
+<li><strong>构造 Householder 矩阵</strong>：构造 $ P = I - 2vv^T $。</li>
+<li><strong>相似变换</strong>：更新矩阵 $ A $ 为 $ A' = P A P^T $。</li>
+<li><strong>重复步骤</strong>：对更新后的矩阵 $ A' $ 重复上述步骤，直到矩阵转化为 Hessenberg 形式。</li>
+</ol>
+<h5>2. Givens 旋转</h5>
+<p>Givens 旋转通过构造旋转矩阵 $ G $ 来逐步消去矩阵 $ A $ 中的非零元素。具体步骤如下：</p>
+<ol>
+<li><strong>选择旋转角度</strong>：选择适当的旋转角度 $ \theta $，使得 $ G(\theta)A $ 的某个非对角线元素为零。</li>
+<li><strong>构造 Givens 矩阵</strong>：构造旋转矩阵 $ G $，其形式为单位矩阵 $ I $ 的一个2x2子块由 $ \cos(\theta) $ 和 $ \sin(\theta) $ 组成。</li>
+<li><strong>相似变换</strong>：更新矩阵 $ A $ 为 $ A' = G A G^T $。</li>
+<li><strong>重复步骤</strong>：对更新后的矩阵 $ A' $ 重复上述步骤，直到矩阵转化为 Hessenberg 形式。</li>
+</ol>
+<h4>Hessenberg 矩阵的应用</h4>
+<p>Hessenberg 形式在数值线性代数中的应用广泛，尤其在特征值计算和矩阵分解方面：</p>
+<ol>
+<li><strong>QR 算法</strong>：在求解矩阵特征值的 QR 算法中，通常先将矩阵转化为 Hessenberg 形式，再进行 QR 迭代。这大大提高了计算效率和数值稳定性。</li>
+<li><strong>线性系统求解</strong>：在求解大型线性系统时，Hessenberg 形式简化了矩阵运算，使得迭代过程更为高效。</li>
+<li><strong>控制系统分析</strong>：在控制理论中，Hessenberg 形式用于分析系统的稳定性和响应特性。</li>
+</ol>
+<h4>数值例子</h4>
+<p>为更好地理解 Hessenberg 形式的计算过程，下面给出一个简单的数值例子：</p>
+<p>考虑矩阵 $ A $：
+$$
+A = \begin{bmatrix}
+4 &amp; 1 &amp; 2 \
+3 &amp; 4 &amp; 1 \
+1 &amp; 1 &amp; 3
+\end{bmatrix}
+$$</p>
+<p>通过 Householder 变换，我们可以逐步将其转化为 Hessenberg 形式：</p>
+<ol>
+<li><strong>第一个 Householder 变换</strong>：选择 $ v = \begin{bmatrix} 1 \ 3 \ 1 \end{bmatrix} $，构造 $ P_1 = I - 2vv^T / v^Tv $，进行相似变换。</li>
+<li><strong>第二个 Householder 变换</strong>：对更新后的矩阵重复上述步骤，直到转化为 Hessenberg 形式。</li>
+</ol>
+<h4>结论</h4>
+<p>Hessenberg 形式在矩阵特征值计算中起着重要作用。通过理解其性质和计算方法，我们可以更高效地解决复杂的矩阵问题，提高数值计算的稳定性和精确性。在实际应用中，合理使用 Hessenberg 形式可以显著提高算法性能，特别是在处理大型稀疏矩阵时。</p>
+<hr>
+<h3>实Schur形式详解</h3>
+<h4>引言</h4>
+<p>实Schur形式是线性代数中一种重要的矩阵分解方法。它将一个实矩阵分解为一个正交矩阵和一个上三角块状矩阵的乘积，使得计算和分析矩阵的特征值和特征向量变得更加简便和高效。</p>
+<h4>实Schur分解定义</h4>
+<p>实Schur分解将一个实矩阵 $ A $ 分解为一个正交矩阵 $ Q $ 和一个上三角块状矩阵 $ T $，使得：
+$$ A = Q T Q^T $$
+其中，$ Q $ 是一个正交矩阵（即 $ Q Q^T = I $），而 $ T $ 是一个上三角块状矩阵，其对角块为1x1或2x2矩阵。这些块对应于矩阵的实特征值和复共轭特征值对。</p>
+<h1 bmatrix="">例如，一个实Schur分解的形式可以表示为：
+$$
+A = \begin{bmatrix}
+4 &amp; 1 &amp; 2 \
+3 &amp; 4 &amp; 1 \
+1 &amp; 1 &amp; 3
+\end</h1>
+<p>Q
+\begin{bmatrix}
+T_{11} &amp; T_{12} &amp; T_{13} \
+0 &amp; T_{22} &amp; T_{23} \
+0 &amp; 0 &amp; T_{33}
+\end{bmatrix}
+Q^T
+$$
+其中 $ T $ 是上三角块状矩阵。</p>
+<h4>实Schur矩阵的性质</h4>
+<ol>
+<li><strong>特征值不变性</strong>：实Schur形式中的矩阵 $ T $ 保留了原矩阵 $ A $ 的特征值。特别地，1x1块对应于实特征值，而2x2块的形式使得我们可以直接读取复特征值的实部和虚部。</li>
+<li><strong>正交性</strong>：分解矩阵 $ Q $ 是一个正交矩阵，这意味着 $ Q^T = Q^{-1} $。这种正交性在数值计算中非常重要，因为它确保了计算的稳定性，不引入额外的数值误差。</li>
+<li><strong>简化计算</strong>：由于 $ T $ 是上三角块状矩阵，许多计算可以简化为对角块上的运算，从而大大提高了计算效率。</li>
+</ol>
+<h4>实Schur分解的计算方法</h4>
+<p>实Schur分解通常通过QR算法实现。其基本步骤如下：</p>
+<h5>1. 预处理：Hessenberg形式</h5>
+<p>首先，将矩阵 $ A $ 转化为 Hessenberg 形式 $ H $。这一步骤通过一系列的 Householder 变换实现。Hessenberg 矩阵是几乎三对角的矩阵，这种形式简化了后续的 QR 分解步骤。</p>
+<h5>2. QR 迭代</h5>
+<p>接下来，对 Hessenberg 矩阵 $ H $ 进行 QR 迭代，将其逐步逼近为上三角块状矩阵 $ T $。QR 迭代的步骤如下：</p>
+<ol>
+<li>对矩阵 $ H $ 进行 QR 分解，得到 $ H = QR $。</li>
+<li>更新矩阵 $ H $，令 $ H = RQ $。</li>
+<li>重复上述步骤，直到矩阵 $ H $ 收敛于上三角块状形式。</li>
+</ol>
+<p>在每次 QR 迭代中，正交矩阵 $ Q $ 被不断累积，最终得到的正交矩阵 $ Q $ 满足 $ A = QTQ^T $。</p>
+<h5>3. 块状结构的处理</h5>
+<p>在实际计算中，如果遇到 2x2 块，可以通过直接计算其特征值或进一步分解来处理。特别地，对于复特征值对，2x2 块的形式使得我们可以直接读取其实部和虚部，从而简化了特征值的计算。</p>
+<h4>数值稳定性和效率</h4>
+<p>在实Schur分解中，数值稳定性是一个关键问题。由于分解过程中涉及大量的矩阵运算，数值误差可能累积。因此，选择合适的算法和数值技巧，如使用Householder变换和Givens旋转，可以有效减少误差累积，提高计算结果的精确性。</p>
+<h4>应用实例</h4>
+<p>实Schur分解在许多实际问题中都有重要应用：</p>
+<ol>
+<li><strong>控制理论</strong>：在控制系统的分析中，实Schur分解用于求解系统矩阵的特征值，以判断系统的稳定性和响应特性。</li>
+<li><strong>结构工程</strong>：在结构分析中，实Schur分解用于计算建筑结构的固有频率和振型，帮助工程师进行结构设计和优化。</li>
+<li><strong>数值线性代数</strong>：在大规模数值模拟和计算中，实Schur分解提高了计算的稳定性和效率，特别是在处理大型稀疏矩阵时。</li>
+</ol>
+<h4>数值例子</h4>
+<p>考虑矩阵 $ A $：
+$$
+A = \begin{bmatrix}
+4 &amp; 1 &amp; 2 \
+3 &amp; 4 &amp; 1 \
+1 &amp; 1 &amp; 3
+\end{bmatrix}
+$$</p>
+<p>通过 QR 迭代和 Hessenberg 变换，我们可以将其转化为实Schur形式：</p>
+<ol>
+<li><strong>Hessenberg 变换</strong>：首先将 $ A $ 转化为 Hessenberg 矩阵 $ H $。</li>
+<li><strong>QR 迭代</strong>：对 $ H $ 进行 QR 迭代，逐步将其逼近为上三角块状矩阵 $ T $。</li>
+<li><strong>特征值计算</strong>：最终得到的上三角块状矩阵 $ T $ 的对角块包含了 $ A $ 的特征值。</li>
+</ol>
+<p>通过这些步骤，我们可以高效、稳定地计算矩阵 $ A $ 的特征值和特征向量。</p>
+<h4>结论</h4>
+<p>实Schur形式在矩阵特征值计算中起着至关重要的作用。通过理解其性质和计算方法，我们可以更高效地解决复杂的矩阵问题，提高数值计算的稳定性和精确性。在实际应用中，合理使用实Schur形式可以显著提高算法性能，特别是在处理大型稀疏矩阵时。</p>
+<hr>
+<p>对 Hessenberg 矩阵进行 QR 迭代可以逐步将其逼近为上三角块状矩阵的原因可以通过数学归纳法和QR分解的性质来解释。</p>
+<h3>QR 分解回顾</h3>
+<p>QR 分解是将一个矩阵 $ A $ 分解为正交矩阵 $ Q $ 和上三角矩阵 $ R $ 的过程：
+$$ A = QR $$
+其中，$ Q $ 是一个正交矩阵（满足 $ Q^T Q = I $），而 $ R $ 是一个上三角矩阵。</p>
+<h3>QR 迭代的基本思想</h3>
+<p>QR 迭代通过多次QR分解的迭代过程，可以逐步将一个矩阵转化为上三角形式。具体步骤如下：</p>
+<ol>
+<li>对给定的矩阵 $ A $，进行QR分解得到 $ A = Q_1 R_1 $。</li>
+<li>更新矩阵 $ A $，令 $ A = R_1 Q_1 $。</li>
+<li>重复上述步骤，直到矩阵 $ A $ 收敛于上三角形式。</li>
+</ol>
+<h3>对 Hessenberg 矩阵的适用性</h3>
+<p>Hessenberg 矩阵是一个几乎上三角的矩阵，它的主对角线以下只有一个非零对角线。这种矩阵形式在一些数值计算问题中出现，例如矩阵的特征值计算和线性方程组求解中常见。</p>
+<h4>归纳证明</h4>
+<p>对 Hessenberg 矩阵 $ H $ 进行 QR 迭代的过程如下：</p>
+<ul>
+<li>初始时， $ H $ 是一个 Hessenberg 矩阵。</li>
+<li>第一次迭代：对 $ H $ 进行 QR 分解得到 $ H = Q_1 R_1 $，其中 $ Q_1 $ 是正交矩阵，$ R_1 $ 是上三角矩阵。更新 $ H $ 为 $ H = R_1 Q_1 $。</li>
+<li>第二次迭代：对更新后的 $ H $ 再次进行 QR 分解，得到 $ H = Q_2 R_2 $，更新 $ H $ 为 $ H = R_2 Q_2 $，其中 $ Q_2 $ 是正交矩阵，$ R_2 $ 是上三角矩阵。</li>
+<li>依次类推，重复这一过程直到 $ H $ 收敛于上三角形式。</li>
+</ul>
+<h4>收敛性和数学分析</h4>
+<p>QR 迭代的收敛性可以通过分析 $ H $ 的特征值分布和迭代过程中的数值稳定性来证明。在每次迭代中，正交矩阵 $ Q_i $ 的作用是将 $ H $ 的非对角元素逐步“压缩”到零，从而使得 $ H $ 逐步变为上三角形式。这种过程是通过正交相似变换来实现的，其数值稳定性得到了广泛的研究和验证。</p>
+<h3>总结</h3>
+<p>因此，对 Hessenberg 矩阵进行 QR 迭代可以逐步将其逼近为上三角块状矩阵，这是由QR分解的特性和迭代过程的数学基础所决定的。这一过程不仅保证了计算的稳定性，还大大简化了矩阵特征值计算等问题的复杂度和计算量。</p>
+<hr>
+<h3>QR迭代法极其详细展开</h3>
+<p>QR迭代法是一种有效的特征值计算方法，特别适用于非对称矩阵。该方法基于反复进行QR分解，将矩阵逐步逼近上三角矩阵。以下是对QR迭代法的详细展开，包括数学原理、具体步骤及其数值稳定性分析。</p>
+<h4>数学原理</h4>
+<p>QR迭代法的基本思想是通过一系列的正交相似变换，将矩阵 $ A $ 转化为上三角矩阵，从而提取其特征值。QR迭代的每一步包括两个主要过程：QR分解和矩阵更新。</p>
+<ol>
+<li>
+<p><strong>QR分解</strong>：
+将矩阵 $ A $ 分解为一个正交矩阵 $ Q $ 和一个上三角矩阵 $ R $：
+$$ A = QR $$
+其中，$ Q $ 是正交矩阵，$ R $ 是上三角矩阵。</p>
+</li>
+<li>
+<p><strong>矩阵更新</strong>：
+更新矩阵 $ A $ 为 $ RQ $：
+$$ A' = RQ $$
+由于 $ Q $ 是正交矩阵，因此 $ A' $ 与 $ A $ 相似，即它们有相同的特征值。</p>
+</li>
+</ol>
+<h4>QR迭代法步骤</h4>
+<p>下面是QR迭代法的详细步骤：</p>
+<ol>
+<li><strong>初始矩阵</strong>：设定初始矩阵 $ A $。</li>
+<li><strong>Hessenberg变换</strong>（可选）：为了提高迭代效率，通常先将 $ A $ 转化为 Hessenberg 形式 $ H $，这是一个几乎上三角的矩阵。</li>
+<li><strong>QR迭代</strong>：
+<ul>
+<li>进行QR分解： $ H = Q_i R_i $</li>
+<li>更新矩阵： $ H = R_i Q_i $</li>
+<li>重复上述步骤，直到矩阵 $ H $ 收敛于上三角矩阵。</li>
+</ul>
+</li>
+</ol>
+<h4>QR迭代法的实现</h4>
+<p>下面是使用Python实现QR迭代法的完整代码，包括详细的注释和文档说明：</p>
+<pre><code class="language-python">import numpy as np
+from typing import Tuple
+
+def householder_transform(A: np.ndarray) -&gt; Tuple[np.ndarray, np.ndarray]:
+    ```
+    将矩阵转换为Hessenberg形式的Householder变换。
+
+    Args:
+        A (np.ndarray): 输入矩阵。
+
+    Returns:
+        H (np.ndarray): Hessenberg形式的矩阵。
+        Q (np.ndarray): 正交矩阵。
+    ```
+    m, n = A.shape
+    Q = np.eye(m)
+    H = A.copy()
+
+    for i in range(n-2):
+        x = H[i+1:, i]
+        e = np.zeros_like(x)
+        e[0] = np.linalg.norm(x) * (1 if x[0] == 0 else np.sign(x[0]))
+        u = x + e
+        u = u / np.linalg.norm(u)
+
+        H[i+1:, i:] -= 2 * np.outer(u, u @ H[i+1:, i:])
+        H[:, i+1:] -= 2 * np.outer(H[:, i+1:] @ u, u)
+        Q[i+1:] -= 2 * np.outer(u, u @ Q[i+1:])
+
+    return H, Q.T
+
+def qr_iteration(H: np.ndarray, max_iter: int = 1000, tol: float = 1e-10) -&gt; Tuple[np.ndarray, np.ndarray]:
+    ```
+    对Hessenberg矩阵进行QR迭代，逼近实Schur形式。
+
+    Args:
+        H (np.ndarray): Hessenberg矩阵。
+        max_iter (int): 最大迭代次数。
+        tol (float): 收敛容差。
+
+    Returns:
+        T (np.ndarray): 上三角块状矩阵。
+        Q (np.ndarray): 正交矩阵。
+    ```
+    n = H.shape[0]
+    Q_total = np.eye(n)
+
+    for _ in range(max_iter):
+        Q, R = np.linalg.qr(H)
+        H = R @ Q
+        Q_total = Q_total @ Q
+
+        # 检查收敛性
+        off_diagonal_norm = np.sum(np.abs(H[np.tril_indices(n, -1)]))
+        if off_diagonal_norm &lt; tol:
+            break
+
+    return H, Q_total
+
+class SchurForm:
+    ```
+    将矩阵转换为实Schur形式的类。
+
+    Attributes:
+        A (np.ndarray): 输入矩阵。
+    ```
+
+    def __init__(self, A: np.ndarray):
+        ```
+        初始化SchurForm类。
+
+        Args:
+            A (np.ndarray): 输入矩阵。
+        ```
+        self.A = A
+
+    def compute_schur_form(self) -&gt; Tuple[np.ndarray, np.ndarray]:
+        ```
+        计算矩阵的实Schur形式。
+
+        Returns:
+            T (np.ndarray): 实Schur形式的上三角块状矩阵。
+            Q (np.ndarray): 实Schur形式的正交矩阵。
+        ```
+        # 转换为Hessenberg形式
+        H, Q = householder_transform(self.A)
+
+        # QR迭代
+        T, Q_schur = qr_iteration(H)
+
+        # 最终的正交矩阵
+        Q_final = Q @ Q_schur
+
+        return T, Q_final
+
+def main():
+    ```
+    主函数，用于测试SchurForm类。
+    ```
+    A = np.array([[4, 1, 2],
+                  [3, 4, 1],
+                  [1, 1, 3]], dtype=float)
+
+    schur = SchurForm(A)
+    T, Q = schur.compute_schur_form()
+
+    print(&quot;原始矩阵 A:&quot;)
+    print(A)
+    print(&quot;\nSchur形式的上三角块状矩阵 T:&quot;)
+    print(T)
+    print(&quot;\n正交矩阵 Q:&quot;)
+    print(Q)
+    print(&quot;\n验证 A = Q T Q^T:&quot;)
+    print(np.allclose(A, Q @ T @ Q.T))
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<h3>QR迭代法的收敛性和数值稳定性</h3>
+<p>QR迭代法的收敛性和数值稳定性是其应用中的关键问题。以下是对这些方面的详细分析：</p>
+<ol>
+<li>
+<p><strong>收敛性</strong>：</p>
+<ul>
+<li>QR迭代法通常对具有不同特征值模的矩阵收敛较快。特别是当矩阵的特征值分布明显时，QR迭代法可以快速收敛。</li>
+<li>对于一般的矩阵，通过Hessenberg变换预处理，可以加速QR迭代法的收敛。这是因为Hessenberg矩阵接近上三角形式，减少了QR分解的计算复杂度。</li>
+</ul>
+</li>
+<li>
+<p><strong>数值稳定性</strong>：</p>
+<ul>
+<li>使用正交矩阵进行相似变换，可以保持矩阵的特征值不变，从而避免了数值误差的累积。</li>
+<li>在每次QR分解和矩阵更新过程中，正交矩阵的使用确保了数值计算的稳定性，特别是在高维度情况下。</li>
+</ul>
+</li>
+</ol>
+<h3>结论</h3>
+<p>QR迭代法是一种强大的特征值计算方法，通过反复进行QR分解和矩阵更新，可以将一般矩阵逐步逼近为上三角形式。理解其数学原理和实现步骤，对从事数值线性代数研究和应用的人员具有重要意义。通过合理的预处理和数值技巧，可以显著提高QR迭代法的收敛速度和计算稳定性。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 03_2.7.4_The_Hessenberg_and_Real_Schur_Forms
+
+"""
+
+Lecture: 2._Chapters/2.7_Unsymmetric_Eigenvalue_Problems
+Content: 03_2.7.4_The_Hessenberg_and_Real_Schur_Forms
+
+"""
+
+import numpy as np
+from typing import Tuple
+
+def householder_transform(A: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+    """
+    将矩阵转换为Hessenberg形式的Householder变换。
+
+    Args:
+        A (np.ndarray): 输入矩阵。
+
+    Returns:
+        H (np.ndarray): Hessenberg形式的矩阵。
+        Q (np.ndarray): 正交矩阵。
+    """
+    m, n = A.shape
+    Q = np.eye(m)
+    H = A.copy()
+
+    for i in range(n-2):
+        x = H[i+1:, i]
+        e = np.zeros_like(x)
+        e[0] = np.linalg.norm(x) * (1 if x[0] == 0 else np.sign(x[0]))
+        u = x + e
+        u = u / np.linalg.norm(u)
+
+        H[i+1:, i:] -= 2 * np.outer(u, u @ H[i+1:, i:])
+        H[:, i+1:] -= 2 * np.outer(H[:, i+1:] @ u, u)
+        Q[i+1:] -= 2 * np.outer(u, u @ Q[i+1:])
+
+    return H, Q.T
+
+
+def qr_iteration(H: np.ndarray, max_iter: int = 1000, tol: float = 1e-10) -> Tuple[np.ndarray, np.ndarray]:
+    """
+    对Hessenberg矩阵进行QR迭代，逼近实Schur形式。
+
+    Args:
+        H (np.ndarray): Hessenberg矩阵。
+        max_iter (int): 最大迭代次数。
+        tol (float): 收敛容差。
+
+    Returns:
+        T (np.ndarray): 上三角块状矩阵。
+        Q (np.ndarray): 正交矩阵。
+    """
+    n = H.shape[0]
+    Q_total = np.eye(n)
+
+    for _ in range(max_iter):
+        Q, R = np.linalg.qr(H)
+        H = R @ Q
+        Q_total = Q_total @ Q
+
+        # 检查收敛性
+        off_diagonal_norm = np.sum(np.abs(H[np.tril_indices(n, -1)]))
+        if off_diagonal_norm < tol:
+            break
+
+    return H, Q_total
+
+
+class SchurForm:
+    """
+    将矩阵转换为实Schur形式的类。
+
+    Attributes:
+        A (np.ndarray): 输入矩阵。
+    """
+
+    def __init__(self, A: np.ndarray):
+        """
+        初始化SchurForm类。
+
+        Args:
+            A (np.ndarray): 输入矩阵。
+        """
+        self.A = A
+
+    def compute_schur_form(self) -> Tuple[np.ndarray, np.ndarray]:
+        """
+        计算矩阵的实Schur形式。
+
+        Returns:
+            T (np.ndarray): 实Schur形式的上三角块状矩阵。
+            Q (np.ndarray): 实Schur形式的正交矩阵。
+        """
+        # 转换为Hessenberg形式
+        H, Q = householder_transform(self.A)
+
+        # QR迭代
+        T, Q_schur = qr_iteration(H)
+
+        # 最终的正交矩阵
+        Q_final = Q @ Q_schur
+
+        return T, Q_final
+
+
+def main():
+    """
+    主函数，用于测试SchurForm类。
+    """
+    A = np.array([[4, 1, 2],
+                  [3, 4, 1],
+                  [1, 1, 3]], dtype=float)
+
+    schur = SchurForm(A)
+    T, Q = schur.compute_schur_form()
+
+    print("原始矩阵 A:")
+    print(A)
+    print("\nSchur形式的上三角块状矩阵 T:")
+    print(T)
+    print("\n正交矩阵 Q:")
+    print(Q)
+    print("\n验证 A = Q T Q^T:")
+    print(np.allclose(A, Q @ T @ Q.T))
+
+if __name__ == "__main__":
+    main()
+</code></pre>
+  </div>
+</body>
+</html>
+  

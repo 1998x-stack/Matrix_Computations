@@ -1,0 +1,193 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>2.4.8 Circulant and Discrete Poisson Systems</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>07_2.4.8_Circulant_and_Discrete_Poisson_Systems</h1>
+<pre><code>
+Lecture: 2._Chapters/2.4_Special_Linear_Systems
+Content: 07_2.4.8_Circulant_and_Discrete_Poisson_Systems
+
+</code></pre>
+<h3>详细分析循环矩阵和离散Poisson系统</h3>
+<p>在《Matrix Computations》一书的第4章，第4.8节中，循环矩阵和离散Poisson系统进行了详细讨论。这些系统在数值分析、信号处理和物理模拟中有重要应用。以下是对该部分内容的详细分析：</p>
+<h4>1. 循环矩阵的定义与性质</h4>
+<p>循环矩阵是特殊的Toeplitz矩阵，其特点是矩阵的每一行都是上一行通过循环右移一个位置得到的。形式上，如果矩阵 $ C $ 的元素满足 $ c_{ij} = c_{(i-j) \mod n} $，则称 $ C $ 为循环矩阵。例如， $ 5 \times 5 $ 的循环矩阵可以表示为：
+$$ C = \begin{pmatrix}
+c_0 &amp; c_{n-1} &amp; c_{n-2} &amp; \cdots &amp; c_1 \
+c_1 &amp; c_0 &amp; c_{n-1} &amp; \cdots &amp; c_2 \
+c_2 &amp; c_1 &amp; c_0 &amp; \cdots &amp; c_3 \
+\vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \
+c_{n-1} &amp; c_{n-2} &amp; c_{n-3} &amp; \cdots &amp; c_0
+\end{pmatrix} $$</p>
+<p><strong>性质</strong>：</p>
+<ul>
+<li>循环矩阵是可对角化的，其特征向量是离散傅里叶变换（DFT）矩阵的列向量。</li>
+<li>循环矩阵的特征值可以通过快速傅里叶变换（FFT）在 $ O(n \log n) $ 时间复杂度内计算  。</li>
+</ul>
+<h4>2. 循环矩阵的快速求解</h4>
+<p>由于循环矩阵具有特殊的结构，其求解可以通过快速傅里叶变换（FFT）来实现。具体步骤如下：</p>
+<ol>
+<li>对矩阵进行DFT，对应特征向量。</li>
+<li>计算特征值的对角矩阵。</li>
+<li>通过逆DFT恢复解向量。</li>
+</ol>
+<p><strong>算法步骤</strong>：</p>
+<ol>
+<li>使用FFT计算 $ \mathbf{y} = \text{DFT}(\mathbf{b}) $。</li>
+<li>计算特征值对应的解 $ \mathbf{x} = \mathbf{y} / \lambda $，其中 $ \lambda $ 是特征值。</li>
+<li>使用逆FFT计算 $ \mathbf{x} = \text{IDFT}(\mathbf{x}) $  。</li>
+</ol>
+<h4>3. 离散Poisson方程</h4>
+<p>离散Poisson方程在数值分析中有广泛应用，尤其是在求解偏微分方程（PDEs）时。Poisson方程的一维形式为：
+$$ \frac{d^2u}{dx^2} = -f(x) $$</p>
+<p>通过有限差分法，将其离散化后得到线性方程组：
+$$ -u_{i-1} + 2u_i - u_{i+1} = h^2 f_i $$</p>
+<p><strong>边界条件</strong>：</p>
+<ul>
+<li>Dirichlet边界条件（DD）： $ u(a) = \alpha, u(b) = \beta $</li>
+<li>Neumann边界条件（NN）： $ u'(a) = \gamma, u'(b) = \delta $</li>
+<li>周期边界条件（P）： $ u(a) = u(b) $ 。</li>
+</ul>
+<h4>4. 二维离散Poisson方程</h4>
+<p>二维Poisson方程更为复杂，其形式为：
+$$ \frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2} = -F(x, y) $$</p>
+<p>通过离散化，可以将其转换为线性方程组，其系数矩阵具有块循环结构。可以通过Kronecker积和快速傅里叶变换（FFT）来高效求解  。</p>
+<h4>5. 快速求解离散Poisson方程</h4>
+<p>为了高效求解离散Poisson方程，可以使用分块技术和快速傅里叶变换（FFT）：</p>
+<p><strong>算法步骤</strong>：</p>
+<ol>
+<li>将二维网格上的Poisson方程转换为线性方程组，其系数矩阵具有块循环结构。</li>
+<li>使用Kronecker积表示系数矩阵。</li>
+<li>通过FFT求解特征值问题。</li>
+<li>使用逆FFT恢复解 。</li>
+</ol>
+<h4>6. 数值稳定性和效率</h4>
+<p>在数值计算中，循环矩阵和离散Poisson系统的快速求解方法具有显著的效率优势，能够在 $ O(n \log n) $ 时间复杂度内求解。然而，数值稳定性仍需关注，特别是在处理边界条件和稀疏矩阵时。</p>
+<p><strong>数值稳定性</strong>：</p>
+<ul>
+<li>使用FFT时需注意舍入误差。</li>
+<li>对于大规模问题，需进行预处理以减少误差累积 。</li>
+</ul>
+<h4>7. 应用实例</h4>
+<p>循环矩阵和离散Poisson系统在许多实际问题中有重要应用，包括图像处理、物理模拟和信号处理等。</p>
+<p><strong>实例</strong>：</p>
+<ul>
+<li>在图像处理中的去模糊问题，可以使用循环矩阵来表示卷积操作，并通过FFT快速求解。</li>
+<li>在物理模拟中，求解热传导问题时，可以使用离散Poisson方程进行数值模拟。</li>
+</ul>
+<h4>8. 总结</h4>
+<p>循环矩阵和离散Poisson系统在数值计算和实际应用中具有重要地位。通过快速傅里叶变换（FFT）和分块技术，可以高效求解这些系统，同时需关注数值稳定性问题。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 07_2.4.8_Circulant_and_Discrete_Poisson_Systems
+
+"""
+
+Lecture: 2._Chapters/2.4_Special_Linear_Systems
+Content: 07_2.4.8_Circulant_and_Discrete_Poisson_Systems
+
+"""
+
+import numpy as np
+from typing import Tuple
+
+class CirculantPoissonSolver:
+    """
+    循环矩阵和离散Poisson系统求解器
+    """
+
+    def __init__(self, f: np.ndarray, boundary_conditions: Tuple[float, float]) -> None:
+        """
+        初始化求解器
+
+        Args:
+            f (np.ndarray): 离散Poisson方程的右端项
+            boundary_conditions (Tuple[float, float]): 边界条件 (u(a), u(b))
+        """
+        self.f = f
+        self.n = len(f)
+        self.u_a, self.u_b = boundary_conditions
+        self.solution = None
+
+    def solve_system(self) -> np.ndarray:
+        """
+        使用快速傅里叶变换（FFT）求解离散Poisson方程
+
+        Returns:
+            np.ndarray: 求解得到的离散Poisson方程的解向量
+        """
+        # 构造右端项
+        b = self._construct_rhs()
+
+        # 构造循环矩阵的第一列
+        first_column = self._construct_first_column()
+
+        # 使用FFT求解循环矩阵系统
+        x = np.fft.ifft(np.fft.fft(b) / np.fft.fft(first_column)).real
+
+        # 应用边界条件
+        x += self.u_a + (self.u_b - self.u_a) * np.arange(self.n) / (self.n - 1)
+
+        self.solution = x
+        return x
+
+    def _construct_rhs(self) -> np.ndarray:
+        """
+        构造离散Poisson方程的右端项
+
+        Returns:
+            np.ndarray: 离散Poisson方程的右端项向量
+        """
+        return -self.f
+
+    def _construct_first_column(self) -> np.ndarray:
+        """
+        构造循环矩阵的第一列
+
+        Returns:
+            np.ndarray: 循环矩阵的第一列向量
+        """
+        first_column = np.zeros(self.n)
+        first_column[0] = 2.0
+        first_column[1] = -1.0
+        first_column[self.n - 1] = -1.0
+        return first_column
+
+def main():
+    """
+    主函数，用于示例循环矩阵和离散Poisson系统的求解
+    """
+    # 定义离散Poisson方程的右端项和边界条件
+    f = np.array([1.0, 2.0, 3.0, 4.0])
+    boundary_conditions = (0.0, 0.0)  # 边界条件 (u(a), u(b))
+
+    # 初始化求解器
+    solver = CirculantPoissonSolver(f, boundary_conditions)
+    
+    # 求解离散Poisson方程
+    solution = solver.solve_system()
+    
+    # 打印求解结果
+    print("离散Poisson方程的解:")
+    print(solution)
+
+if __name__ == "__main__":
+    main()</code></pre>
+  </div>
+</body>
+</html>
+  

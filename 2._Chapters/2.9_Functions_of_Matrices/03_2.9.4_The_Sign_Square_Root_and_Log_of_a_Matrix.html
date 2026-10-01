@@ -1,0 +1,196 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>2.9.4 The Sign Square Root and Log of a Matrix</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>03_2.9.4_The_Sign_Square_Root_and_Log_of_a_Matrix</h1>
+<pre><code>
+Lecture: 2._Chapters/2.9_Functions_of_Matrices
+Content: 03_2.9.4_The_Sign_Square_Root_and_Log_of_a_Matrix
+
+</code></pre>
+<h3>03_2.9.4_矩阵的符号、平方根和对数</h3>
+<h4>矩阵符号函数</h4>
+<p>对于不在虚轴上的所有复数 $ z $，我们定义其符号函数如下：</p>
+<p>$$ \text{sign}(z) = \begin{cases}
++1 &amp; \text{若 } \text{Re}(z) &gt; 0 \
+-1 &amp; \text{若 } \text{Re}(z) &lt; 0
+\end{cases} $$</p>
+<p>对于一个没有纯虚特征值的矩阵 $ A $，其符号函数可以通过其Jordan标准形来定义。设 $ A $ 的Jordan标准形为 $ A = X J X^{-1} $，其中 $ J $ 是Jordan块的对角矩阵。矩阵 $ A $ 的符号函数定义为：</p>
+<p>$$ \text{sign}(A) = X \begin{bmatrix} \text{sign}(J_1) &amp; 0 \ 0 &amp; \text{sign}(J_2) \end{bmatrix} X^{-1} $$</p>
+<p>其中 $ J_1 $ 和 $ J_2 $ 分别包含 $ A $ 的负实部和正实部特征值的Jordan块。这个定义使得我们可以通过符号函数近似计算矩阵的对角块。</p>
+<h5>Newton 迭代法</h5>
+<p>Newton 迭代法可以用来计算矩阵符号函数：</p>
+<p>$$ S_0 = A $$
+$$ S_{k+1} = \frac{1}{2}(S_k + S_k^{-1}) $$</p>
+<p>该迭代法假设 $ A $ 没有纯虚特征值，并且能够快速收敛到 $ \text{sign}(A) $  。</p>
+<h4>矩阵平方根</h4>
+<p>矩阵平方根问题在基本函数存在分支时会出现歧义。例如，如果 $ f(x) = \sqrt{x} $ 且</p>
+<p>$$ A = \begin{bmatrix} 4 &amp; 10 \ 0 &amp; 9 \end{bmatrix} $$</p>
+<p>那么 $ A $ 至少有四个合法的平方根。为了消除这种歧义，我们定义主平方根 $ A^{1/2} $ 满足 $ (A^{1/2})^2 = A $ 且其特征值具有正实部。</p>
+<h5>Newton 迭代法</h5>
+<p>类似于标量平方根的Newton迭代法 $ x_{k+1} = \frac{1}{2}(x_k + \frac{a}{x_k}) $，我们有：</p>
+<p>$$ X_0 = A $$
+$$ X_{k+1} = \frac{1}{2}(X_k + X_k^{-1}A) $$</p>
+<p>该方法保证了全局收敛性和局部二次收敛性  。</p>
+<p>另一个更优的迭代法是 Denman-Beavers 迭代法：</p>
+<p>$$ S_0 = A, \quad T_0 = I $$
+$$ S_{k+1} = \frac{1}{2}(S_k + T_k^{-1}) $$
+$$ T_{k+1} = \frac{1}{2}(T_k + S_k^{-1}) $$</p>
+<p>该方法具有更好的数值性质  。</p>
+<h4>矩阵对数</h4>
+<p>矩阵对数问题是矩阵指数问题的逆问题。矩阵对数的定义为解决方程 $ e^X = A $ 的矩阵 $ X $。为了消除歧义，我们定义主对数满足其特征值在 $ -\pi $ 到 $ \pi $ 之间。</p>
+<h5>Pade 近似和缩放平方法</h5>
+<p>类似于矩阵指数的缩放平方法，我们可以通过以下步骤计算矩阵对数：</p>
+<ol>
+<li>选择一个适当的缩放因子 $ m $，使得 $ |A^{1/m} - I| $ 足够小。</li>
+<li>计算缩放后的矩阵 $ A^{1/m} $ 的对数 $ \log(A^{1/m}) $。</li>
+<li>通过平方恢复原始矩阵的对数：$ \log(A) = m \log(A^{1/m}) $。</li>
+</ol>
+<p>Maclaurin 级数和 Gregory 级数也可以用于矩阵对数的近似计算。例如，Maclaurin 级数展开为：</p>
+<p>$$ \log(A) \approx M_q(A) = \sum_{k=1}^q (-1)^{k+1} \frac{(A-I)^k}{k} $$</p>
+<p>Gregory 级数展开为：</p>
+<p>$$ \log(A) \approx G_q(A) = -2 \sum_{k=1}^q \frac{(I-A)(I+A)^{-1}}{2k-1} $$</p>
+<p>这些方法都需要矩阵 $ A $ 的特征值具有正实部才能收敛  。</p>
+<h4>总结</h4>
+<p>本节讨论了矩阵的符号函数、平方根和对数的定义和计算方法。符号函数通过Jordan标准形和Newton迭代法进行计算，平方根通过Newton迭代法和Denman-Beavers迭代法计算，而矩阵对数则通过Pade近似和缩放平方法进行计算。这些方法在数值计算中有广泛的应用，但也存在一定的数值稳定性问题，需要在实际应用中进行具体分析和调整  。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 03_2.9.4_The_Sign_Square_Root_and_Log_of_a_Matrix
+
+"""
+
+Lecture: 2._Chapters/2.9_Functions_of_Matrices
+Content: 03_2.9.4_The_Sign_Square_Root_and_Log_of_a_Matrix
+
+"""
+
+import numpy as np
+from numpy.linalg import norm, inv
+from typing import Tuple
+
+class MatrixFunctions:
+    """
+    计算矩阵的符号、平方根和对数的类。
+    """
+
+    def __init__(self, A: np.ndarray):
+        """
+        初始化矩阵 A。
+
+        Args:
+            A (np.ndarray): 输入矩阵。
+        """
+        self.A = A
+        self.n = A.shape[0]
+
+    def matrix_sign(self, tol: float = 1e-10) -> np.ndarray:
+        """
+        计算矩阵的符号函数。
+
+        Args:
+            tol (float): 迭代终止的容差。
+
+        Returns:
+            np.ndarray: 矩阵的符号函数。
+        """
+        S = self.A
+        I = np.eye(self.n)
+        while norm(S - inv(S)) > tol:
+            S = 0.5 * (S + inv(S))
+        return S
+
+    def matrix_square_root(self, tol: float = 1e-10) -> np.ndarray:
+        """
+        计算矩阵的平方根。
+
+        Args:
+            tol (float): 迭代终止的容差。
+
+        Returns:
+            np.ndarray: 矩阵的平方根。
+        """
+        X = self.A
+        I = np.eye(self.n)
+        while norm(X @ X - self.A) > tol:
+            X = 0.5 * (X + inv(X) @ self.A)
+        return X
+
+    def matrix_log(self, tol: float = 1e-10) -> np.ndarray:
+        """
+        计算矩阵的对数。
+
+        Args:
+            tol (float): 迭代终止的容差。
+
+        Returns:
+            np.ndarray: 矩阵的对数。
+        """
+        m = max(0, int(np.ceil(np.log2(norm(self.A, np.inf)))))
+        A_scaled = self.A / (2**m)
+        I = np.eye(self.n)
+        L = np.zeros_like(self.A)
+        for k in range(1, 100):
+            term = (-1)**(k+1) * (A_scaled - I)**k / k
+            L += term
+            if norm(term) < tol:
+                break
+        return L * (2**m)
+
+    def verify_results(self):
+        """
+        验证计算结果的正确性。
+        """
+        sign_A = self.matrix_sign()
+        sqrt_A = self.matrix_square_root()
+        log_A = self.matrix_log()
+
+        # 验证符号函数
+        assert np.allclose(sign_A @ sign_A, np.eye(self.n)), "Sign function verification failed."
+        # 验证平方根
+        assert np.allclose(sqrt_A @ sqrt_A, self.A), "Square root function verification failed."
+        # 验证对数函数
+        assert np.allclose(np.exp(log_A), self.A), "Logarithm function verification failed."
+
+        print("所有结果均已验证正确！")
+
+# 示例使用
+if __name__ == "__main__":
+    # 定义矩阵 A
+    A = np.array([[4, 0], [0, 9]])
+
+    # 创建 MatrixFunctions 实例
+    matrix_funcs = MatrixFunctions(A)
+
+    # 计算并打印矩阵的符号函数
+    sign_A = matrix_funcs.matrix_sign()
+    print(f"矩阵的符号函数:\n{sign_A}")
+
+    # 计算并打印矩阵的平方根
+    sqrt_A = matrix_funcs.matrix_square_root()
+    print(f"矩阵的平方根:\n{sqrt_A}")
+
+    # 计算并打印矩阵的对数
+    log_A = matrix_funcs.matrix_log()
+    print(f"矩阵的对数:\n{log_A}")
+
+    # 验证结果
+    matrix_funcs.verify_results()
+</code></pre>
+  </div>
+</body>
+</html>
+  

@@ -1,0 +1,209 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>2.8.6 Computing the SVD</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>05_2.8.6_Computing_the_SVD</h1>
+<pre><code>
+Lecture: 2._Chapters/2.8_Symmetric_Eigenvalue_Problems
+Content: 05_2.8.6_Computing_the_SVD
+
+</code></pre>
+<h3>2.8.6 奇异值分解的计算</h3>
+<h4>1. 引言</h4>
+<p>奇异值分解（SVD）是数值线性代数中的一个重要工具，广泛应用于数据压缩、信号处理和统计分析等领域。SVD 将一个矩阵分解为三个矩阵的乘积，其中中间的矩阵是对角矩阵，其对角元素称为奇异值。这种分解提供了对矩阵的深刻理解和许多应用上的便利。</p>
+<h4>2. SVD 的定义与性质</h4>
+<p>对于一个实矩阵 $ A \in \mathbb{R}^{m \times n} $，其奇异值分解表示为：
+$$ A = U \Sigma V^T $$
+其中，$ U \in \mathbb{R}^{m \times m} $ 和 $ V \in \mathbb{R}^{n \times n} $ 是正交矩阵，$ \Sigma \in \mathbb{R}^{m \times n} $ 是对角矩阵，其对角元素为 $ \sigma_i $（奇异值），并满足 $ \sigma_1 \geq \sigma_2 \geq \cdots \geq \sigma_{\min(m,n)} \geq 0 $。</p>
+<h4>3. Golub-Kahan-Reinsch 算法</h4>
+<p>Golub-Kahan-Reinsch 算法是计算 SVD 的经典方法之一，其基本步骤如下：</p>
+<ol>
+<li>
+<p><strong>双对角化</strong>：首先将矩阵 $ A $ 转换为上双对角矩阵 $ B $。通过 Householder 变换将矩阵 $ A $ 化为双对角形式：
+$$ B = U_1 A V_1 $$
+其中，$ U_1 $ 和 $ V_1 $ 是正交矩阵。</p>
+</li>
+<li>
+<p><strong>迭代计算</strong>：对上双对角矩阵 $ B $ 应用 QR 算法或其他数值方法，迭代计算其奇异值和奇异向量：
+$$ B = U_2 \Sigma V_2^T $$
+其中，$ U_2 $ 和 $ V_2 $ 是正交矩阵，$ \Sigma $ 是对角矩阵。</p>
+</li>
+<li>
+<p><strong>组合结果</strong>：最终的奇异值分解由以下形式给出：
+$$ A = (U_1 U_2) \Sigma (V_1 V_2)^T $$
+其中，$ U = U_1 U_2 $，$ V = V_1 V_2 $。</p>
+</li>
+</ol>
+<h4>4. Jacobi 方法</h4>
+<p>Jacobi 方法也可以用于计算 SVD。该方法通过一系列的 Givens 旋转，使得矩阵的列正交化，从而逐步逼近对角矩阵。Jacobi SVD 方法特别适用于高精度需求的情况。</p>
+<h5>4.1 旋转矩阵</h5>
+<p>在每一步 Jacobi 迭代中，通过旋转矩阵 $ J(p, q, \theta) $ 对矩阵进行变换，使得矩阵的某些元素逐步变为零。具体形式如下：
+$$ J(p, q, \theta) = \begin{pmatrix}
+1 &amp; \cdots &amp; 0 &amp; \cdots &amp; 0 \
+\vdots &amp; \ddots &amp; \vdots &amp; \ddots &amp; \vdots \
+0 &amp; \cdots &amp; \cos(\theta) &amp; \cdots &amp; \sin(\theta) \
+\vdots &amp; \ddots &amp; -\sin(\theta) &amp; \ddots &amp; \cos(\theta) \
+0 &amp; \cdots &amp; 0 &amp; \cdots &amp; 1 \
+\end{pmatrix} $$
+通过选择合适的 $ \theta $ 使得矩阵的特定元素 $ a_{pq} $ 变为零。</p>
+<h5>4.2 数值实现</h5>
+<p>Jacobi SVD 方法的数值实现涉及多次迭代，每次迭代中对矩阵进行一系列旋转，逐步减少非对角元素的大小，最终得到对角矩阵。该方法具有良好的数值稳定性和高精度。</p>
+<h4>5. Golub-Reinsch SVD 算法</h4>
+<p>Golub-Reinsch SVD 算法是另一种经典的 SVD 计算方法。其基本思想是先将矩阵 $ A $ 转换为上双对角矩阵，然后对该双对角矩阵进行 QR 迭代，最终得到奇异值和奇异向量。</p>
+<h5>5.1 上双对角化</h5>
+<p>通过一系列的 Householder 变换，将矩阵 $ A $ 化为上双对角矩阵 $ B $：
+$$ B = U_1 A V_1 $$
+其中，$ U_1 $ 和 $ V_1 $ 是正交矩阵。</p>
+<h5>5.2 QR 迭代</h5>
+<p>对上双对角矩阵 $ B $ 进行 QR 迭代，通过不断的 Givens 旋转，使得矩阵的非对角元素逐步趋近于零，最终得到对角矩阵：
+$$ B = U_2 \Sigma V_2^T $$
+其中，$ U_2 $ 和 $ V_2 $ 是正交矩阵，$ \Sigma $ 是对角矩阵。</p>
+<h4>6. 数值稳定性与计算复杂度</h4>
+<p>SVD 算法的数值稳定性和计算复杂度是实际应用中的重要考虑因素。Golub-Kahan-Reinsch 算法和 Jacobi SVD 方法都具有良好的数值稳定性，但在计算复杂度上有所不同。Golub-Kahan-Reinsch 算法在大多数情况下效率更高，而 Jacobi SVD 方法在高精度需求的应用中更具优势。</p>
+<h4>7. 应用实例</h4>
+<p>SVD 在科学计算和工程应用中有广泛的应用。例如，在图像处理和压缩中，SVD 用于降维和去噪；在统计分析中，SVD 用于主成分分析（PCA）；在信号处理和数据分析中，SVD 用于特征提取和模式识别。</p>
+<h3>总结</h3>
+<p>奇异值分解作为数值线性代数中的重要工具，通过一系列高效的算法实现，可以提供对矩阵的深刻理解和广泛的应用。无论是 Golub-Kahan-Reinsch 算法还是 Jacobi SVD 方法，都在不同的应用场景中展现了其独特的优势和广泛的适用性。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 05_2.8.6_Computing_the_SVD
+
+"""
+
+Lecture: 2._Chapters/2.8_Symmetric_Eigenvalue_Problems
+Content: 05_2.8.6_Computing_the_SVD
+
+"""
+
+import numpy as np
+from typing import Tuple
+
+class SVDSolver:
+    def __init__(self, matrix: np.ndarray):
+        """
+        Initialize the SVDSolver with a given matrix.
+
+        Args:
+        - matrix (np.ndarray): The matrix to decompose.
+        """
+        assert matrix.ndim == 2, "Input must be a 2D matrix"
+        self.matrix = matrix
+        self.m, self.n = matrix.shape
+
+    def _bidiagonalize(self, A: np.ndarray) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+        """
+        Bidiagonalize the matrix A using Householder reflections.
+
+        Args:
+        - A (np.ndarray): The input matrix to be bidiagonalized.
+
+        Returns:
+        - B (np.ndarray): The bidiagonal matrix.
+        - U (np.ndarray): The orthogonal matrix U.
+        - V (np.ndarray): The orthogonal matrix V.
+        """
+        U = np.eye(self.m)
+        V = np.eye(self.n)
+        B = A.copy()
+
+        for i in range(min(self.m, self.n)):
+            # Apply Householder transformation to rows
+            x = B[i:, i]
+            e1 = np.zeros_like(x)
+            e1[0] = np.linalg.norm(x) if x[0] == 0 else np.sign(x[0]) * np.linalg.norm(x)
+            u = x + e1
+            u /= np.linalg.norm(u)
+
+            H = np.eye(self.m)
+            H[i:, i:] -= 2.0 * np.outer(u, u)
+            B = H @ B
+            U = U @ H
+
+            if i < self.n - 1:
+                # Apply Householder transformation to columns
+                x = B[i, i+1:]
+                e1 = np.zeros_like(x)
+                e1[0] = np.linalg.norm(x) if x[0] == 0 else np.sign(x[0]) * np.linalg.norm(x)
+                u = x + e1
+                u /= np.linalg.norm(u)
+
+                H = np.eye(self.n)
+                H[i+1:, i+1:] -= 2.0 * np.outer(u, u)
+                B = B @ H
+                V = V @ H
+
+        return B, U, V
+
+    def _qr_algorithm(self, B: np.ndarray, tol: float = 1e-10, max_iterations: int = 1000) -> np.ndarray:
+        """
+        Perform the QR algorithm with shifts on the bidiagonal matrix B.
+
+        Args:
+        - B (np.ndarray): The bidiagonal matrix.
+        - tol (float): Tolerance for convergence.
+        - max_iterations (int): Maximum number of iterations.
+
+        Returns:
+        - B (np.ndarray): The matrix B with singular values converged on the diagonal.
+        """
+        for _ in range(max_iterations):
+            off_diagonal_sum = np.sum(np.abs(np.diag(B, k=1)))
+            if off_diagonal_sum < tol:
+                break
+
+            mu = B[-1, -1]
+            Q, R = np.linalg.qr(B - mu * np.eye(B.shape[0]))
+            B = R @ Q + mu * np.eye(B.shape[0])
+
+        return B
+
+    def compute_svd(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+        """
+        Compute the Singular Value Decomposition (SVD) of the matrix.
+
+        Returns:
+        - U (np.ndarray): The orthogonal matrix U.
+        - S (np.ndarray): The singular values as a diagonal matrix.
+        - V (np.ndarray): The orthogonal matrix V.
+        """
+        B, U, V = self._bidiagonalize(self.matrix)
+        B = self._qr_algorithm(B)
+
+        singular_values = np.diag(B)
+        S = np.zeros_like(self.matrix)
+        np.fill_diagonal(S, singular_values)
+
+        return U, S, V.T
+
+# 示例矩阵
+matrix = np.array([
+    [4, 1, 2],
+    [1, 2, 0],
+    [2, 0, 3]
+])
+
+solver = SVDSolver(matrix)
+U, S, V = solver.compute_svd()
+
+print("Matrix U:\n", U)
+print("Singular values (diagonal of S):\n", np.diag(S))
+print("Matrix V^T:\n", V)
+</code></pre>
+  </div>
+</body>
+</html>
+  

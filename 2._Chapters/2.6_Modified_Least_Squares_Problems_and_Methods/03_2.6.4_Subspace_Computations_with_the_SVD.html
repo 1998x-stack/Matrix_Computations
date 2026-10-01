@@ -1,0 +1,192 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>2.6.4 Subspace Computations with the SVD</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>03_2.6.4_Subspace_Computations_with_the_SVD</h1>
+<pre><code>
+Lecture: 2._Chapters/2.6_Modified_Least_Squares_Problems_and_Methods
+Content: 03_2.6.4_Subspace_Computations_with_the_SVD
+
+</code></pre>
+<h3>详细分析使用SVD的子空间计算</h3>
+<p>在《Matrix Computations》一书的第6章，第6.4节对使用奇异值分解（Singular Value Decomposition, SVD）进行子空间计算的方法进行了详细讨论。以下是对第2.6.4节“使用SVD的子空间计算”的详细分析：</p>
+<h4>1. 引言与背景</h4>
+<p>子空间计算在科学计算和数据分析中具有重要的应用，例如信号处理、数据降维和模式识别。在这些应用中，理解两个子空间之间的关系至关重要，如它们之间的距离、相交和旋转。奇异值分解（SVD）是一种强大的工具，可以用来回答这些问题。</p>
+<h4>2. 子空间的旋转</h4>
+<p>设 $A \in \mathbb{R}^{m \times p}$ 是通过一组实验得到的数据矩阵。如果重复相同的实验，得到一个不同的数据矩阵 $B \in \mathbb{R}^{m \times p}$，我们可以通过正交普鲁克鲁斯特问题（Orthogonal Procrustes Problem）来探讨 $B$ 是否可以通过旋转变换为 $A$：
+$$ \min |A - BQ|_F \quad \text{subject to} \quad Q^TQ = I_p $$
+该问题可以通过SVD来解决。</p>
+<p><strong>算法步骤</strong>：</p>
+<ol>
+<li>计算矩阵 $B^T A$ 的SVD：$$ U\Sigma V^T = B^T A $$</li>
+<li>最优旋转矩阵为：$$ Q = UV^T $$</li>
+</ol>
+<h4>3. 子空间之间的角度</h4>
+<p>给定两个子空间 $F$ 和 $G$，可以通过计算它们之间的主要角度（Principal Angles）来量化它们之间的关系。主要角度是两个子空间之间的夹角，通过SVD可以方便地计算这些角度。</p>
+<p><strong>算法6.4.3</strong>：计算主要角度和向量</p>
+<ol>
+<li>计算薄QR分解 $A = Q_A R_A$ 和 $B = Q_B R_B$。</li>
+<li>计算矩阵 $C = Q_A^T Q_B$ 的SVD：$$ U\Sigma V^T = C $$</li>
+<li>主要角度的余弦值为 $\Sigma$ 的对角元素，主要向量为 $Q_A U$ 和 $Q_B V$。</li>
+</ol>
+<h4>4. 子空间的交集</h4>
+<p>两个子空间的交集可以通过主要角度和向量来计算。如果某些主要角度的余弦值为1，那么对应的主要向量就构成了交集的基底。</p>
+<p><strong>定理6.4.2</strong>：令 ${\cos(\theta_i)}<em i="1">{i=1}^k$ 和 ${f_i, g_i}</em>^k$ 分别为主要角度的余弦值和主要向量。如果 $\cos(\theta_i) = 1$，则：
+$$ \text{ran}(A) \cap \text{ran}(B) = \text{span}{f_1, \ldots, f_s} = \text{span}{g_1, \ldots, g_s} $$</p>
+<h4>5. 计算子空间距离</h4>
+<p>子空间距离可以通过计算正交投影之间的差异来度量。对于两个子空间 $S_1$ 和 $S_2$，定义它们之间的距离为：
+$$ \text{dist}(S_1, S_2) = |P_1 - P_2|_F $$
+其中 $P_1$ 和 $P_2$ 分别是子空间 $S_1$ 和 $S_2$ 的正交投影矩阵。</p>
+<h3>结论</h3>
+<p>使用奇异值分解进行子空间计算是处理高维数据和复杂线性关系的一种有效方法。通过SVD，可以方便地计算子空间之间的旋转、角度、交集和距离，从而在信号处理、数据分析和模式识别等领域提供了强大的工具。这些方法不仅在理论上具有重要意义，而且在实际应用中也被广泛采用，具有很高的实用价值。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 03_2.6.4_Subspace_Computations_with_the_SVD
+
+"""
+
+Lecture: 2._Chapters/2.6_Modified_Least_Squares_Problems_and_Methods
+Content: 03_2.6.4_Subspace_Computations_with_the_SVD
+
+"""
+
+import numpy as np
+from typing import Tuple
+
+class SubspaceComputations:
+    """
+    使用奇异值分解（SVD）进行子空间计算的类
+    """
+
+    @staticmethod
+    def orthogonal_procrustes(A: np.ndarray, B: np.ndarray) -> np.ndarray:
+        """
+        计算两个子空间之间的最优旋转矩阵
+
+        Args:
+            A (np.ndarray): 第一个矩阵，形状为 (m, p)
+            B (np.ndarray): 第二个矩阵，形状为 (m, p)
+
+        Returns:
+            np.ndarray: 最优旋转矩阵 Q，形状为 (p, p)
+        """
+        U, _, Vt = np.linalg.svd(np.dot(B.T, A))
+        Q = np.dot(U, Vt)
+        return Q
+
+    @staticmethod
+    def principal_angles(A: np.ndarray, B: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+        """
+        计算两个子空间之间的主要角度和向量
+
+        Args:
+            A (np.ndarray): 第一个子空间矩阵，形状为 (m, p)
+            B (np.ndarray): 第二个子空间矩阵，形状为 (m, p)
+
+        Returns:
+            Tuple[np.ndarray, np.ndarray]: 主要角度和对应的主要向量
+        """
+        Q_A, _ = np.linalg.qr(A)
+        Q_B, _ = np.linalg.qr(B)
+        C = np.dot(Q_A.T, Q_B)
+        U, Sigma, Vt = np.linalg.svd(C)
+        return Sigma, (Q_A @ U, Q_B @ Vt.T)
+
+    @staticmethod
+    def subspace_intersection(A: np.ndarray, B: np.ndarray) -> np.ndarray:
+        """
+        计算两个子空间的交集
+
+        Args:
+            A (np.ndarray): 第一个子空间矩阵，形状为 (m, p)
+            B (np.ndarray): 第二个子空间矩阵，形状为 (m, p)
+
+        Returns:
+            np.ndarray: 交集子空间的基矩阵
+        """
+        _, Sigma, (U_A, U_B) = SubspaceComputations.principal_angles(A, B)
+        intersection_mask = np.isclose(Sigma, 1)
+        intersection = U_A[:, intersection_mask]
+        return intersection
+
+    @staticmethod
+    def subspace_distance(A: np.ndarray, B: np.ndarray) -> float:
+        """
+        计算两个子空间之间的距离
+
+        Args:
+            A (np.ndarray): 第一个子空间矩阵，形状为 (m, p)
+            B (np.ndarray): 第二个子空间矩阵，形状为 (m, p)
+
+        Returns:
+            float: 两个子空间之间的距离
+        """
+        Q_A, _ = np.linalg.qr(A)
+        Q_B, _ = np.linalg.qr(B)
+        P_A = np.dot(Q_A, Q_A.T)
+        P_B = np.dot(Q_B, Q_B.T)
+        dist = np.linalg.norm(P_A - P_B, ord='fro')
+        return dist
+
+def main():
+    """
+    主函数，用于示例子空间计算方法
+    """
+    # 示例矩阵
+    A = np.array([
+        [1, 2],
+        [3, 4],
+        [5, 6]
+    ], dtype=float)
+    B = np.array([
+        [7, 8],
+        [9, 10],
+        [11, 12]
+    ], dtype=float)
+
+    # 计算最优旋转矩阵
+    Q = SubspaceComputations.orthogonal_procrustes(A, B)
+    print("最优旋转矩阵 Q:")
+    print(Q)
+
+    # 计算主要角度和向量
+    angles, vectors = SubspaceComputations.principal_angles(A, B)
+    print("\n主要角度的余弦值:")
+    print(angles)
+    print("\n主要向量:")
+    print("子空间A中的主要向量:")
+    print(vectors[0])
+    print("子空间B中的主要向量:")
+    print(vectors[1])
+
+    # 计算子空间的交集
+    intersection = SubspaceComputations.subspace_intersection(A, B)
+    print("\n子空间的交集:")
+    print(intersection)
+
+    # 计算子空间距离
+    distance = SubspaceComputations.subspace_distance(A, B)
+    print("\n子空间之间的距离:")
+    print(distance)
+
+if __name__ == "__main__":
+    main()
+</code></pre>
+  </div>
+</body>
+</html>
+  

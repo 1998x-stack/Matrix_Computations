@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>2.7.3 Power Iterations</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>02_2.7.3_Power_Iterations</h1>
+<pre><code>
+Lecture: 2._Chapters/2.7_Unsymmetric_Eigenvalue_Problems
+Content: 02_2.7.3_Power_Iterations
+
+</code></pre>
+<h3>第2.7.3节 幂迭代法 (Power Iterations) 详细分析</h3>
+<p>幂迭代法是求解矩阵特征值和特征向量的一种基本而常用的方法。它在处理大型稀疏矩阵时尤其有用，因为它只需要矩阵与向量的乘法运算。以下是对第2.7.3节内容的详细分析：</p>
+<h4>1. 引言</h4>
+<p>幂迭代法主要用于计算矩阵的主特征值及其对应的特征向量。主特征值是指绝对值最大的特征值。这个方法的基本思想是通过反复乘以矩阵，使得向量逐渐接近于主特征向量的方向。</p>
+<h4>2. 算法描述</h4>
+<p>幂迭代法的基本步骤如下：</p>
+<ol>
+<li>选择一个初始向量 $ q^{(0)} $，通常为随机向量。</li>
+<li>迭代进行如下计算：
+$$
+z^{(k)} = A q^{(k-1)}
+$$
+$$
+q^{(k)} = \frac{z^{(k)}}{|z^{(k)}|}
+$$
+$$
+\lambda^{(k)} = (q^{(k)})^H A q^{(k)}
+$$
+其中，$ | \cdot | $ 表示向量的2-范数，$ (q^{(k)})^H $ 表示向量 $ q^{(k)} $ 的共轭转置。</li>
+</ol>
+<h4>3. 收敛性分析</h4>
+<p>幂迭代法的收敛性依赖于矩阵的谱性质，特别是主特征值与次主特征值的模的比值。设 $ A $ 的特征值为 $ \lambda_1, \lambda_2, \ldots, \lambda_n $，且 $ |\lambda_1| &gt; |\lambda_2| \geq \ldots \geq |\lambda_n| $，则幂迭代法收敛的速度与比值 $ |\lambda_2 / \lambda_1| $ 相关。比值越小，收敛越快。</p>
+<p>具体来说，当初始向量 $ q^{(0)} $ 包含有 $ A $ 的主特征向量对应的成分时，幂迭代法会逐渐放大这个成分，而其他成分则会被逐渐压缩。经过若干次迭代后，向量 $ q^{(k)} $ 会接近于主特征向量的方向。</p>
+<h4>4. 数值稳定性</h4>
+<p>在实际计算中，幂迭代法的数值稳定性是一个重要考虑因素。虽然理论上只需要矩阵-向量乘法，但实际计算中可能会引入舍入误差。为了减少误差的积累，可以每隔几次迭代对向量进行归一化处理，以保证向量的长度不至于过大或过小。</p>
+<h4>5. 改进与变种</h4>
+<p>为了提高幂迭代法的效率和稳定性，有多种改进和变种方法被提出：</p>
+<ul>
+<li><strong>反幂法</strong>：用于计算模最小的特征值。通过求解线性方程组 $ A^{-1} y = x $，将矩阵 $ A $ 的主特征值问题转化为求解 $ A^{-1} $ 的主特征值问题。</li>
+<li><strong>位移反幂法</strong>：通过加上位移 $ \sigma $，计算 $ (A - \sigma I)^{-1} $ 的主特征值，从而获得 $ A $ 的接近于 $ \sigma $ 的特征值。</li>
+<li><strong>Rayleigh商迭代法</strong>：结合幂迭代法和位移策略，通过动态调整位移，提高收敛速度。</li>
+</ul>
+<h4>6. 实际应用</h4>
+<p>幂迭代法在实际中有广泛的应用：</p>
+<ul>
+<li><strong>结构工程</strong>：用于计算建筑结构的固有频率（特征值）和振型（特征向量）。</li>
+<li><strong>控制系统</strong>：用于分析系统的稳定性，通过计算系统矩阵的主特征值来判断系统响应。</li>
+<li><strong>数值线性代数</strong>：在求解大型稀疏矩阵的特征值问题时，幂迭代法作为基础方法，常用于Krylov子空间方法的初始步骤。</li>
+</ul>
+<h3>结论</h3>
+<p>第2.7.3节详细介绍了幂迭代法的原理、收敛性和实际应用。理解和掌握幂迭代法对于解决大型稀疏矩阵的特征值问题具有重要意义。通过合理的改进和数值策略，可以有效地提高算法的收敛速度和稳定性，为实际应用提供可靠的工具。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 02_2.7.3_Power_Iterations
+
+"""
+
+Lecture: 2._Chapters/2.7_Unsymmetric_Eigenvalue_Problems
+Content: 02_2.7.3_Power_Iterations
+
+"""
+
+</code></pre>
+  </div>
+</body>
+</html>
+  
